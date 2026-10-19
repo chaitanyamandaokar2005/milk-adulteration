@@ -1,5 +1,3 @@
-// Color science utilities for strip reaction analysis
-
 function hexToRgb(hex) {
   let cleaned = hex.replace('#', '');
   if (cleaned.length === 3) {

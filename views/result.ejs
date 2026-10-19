@@ -1,7 +1,7 @@
 <%- include('partials/head') %>
 <%- include('partials/navbar') %>
 
-<main class="page-shell result-page">
+<main class="page-shell result-page" id="main">
   <div class="container result-layout">
     <div class="result-empty" id="resultPlaceholder">
       <div class="card empty-auth-card">
@@ -20,20 +20,40 @@
         </div>
       </div>
 
-      <article class="card certificate-card" id="resultWindow">
-        <div class="lab-report-header" id="labReportHeader">
-          <div class="lab-report-title-row">
-            <div>
-              <div class="lab-report-label">PureMilk AI Diagnostic Laboratory</div>
-              <div class="lab-report-subtitle">Chemical adulteration analysis certificate</div>
+      <article class="card certificate-card official-report" id="resultWindow">
+        <header class="lab-report-header" id="labReportHeader">
+          <div class="print-letterhead">
+            <div class="print-brand">
+              <span class="print-mark" aria-hidden="true"></span>
+              <div>
+                <div class="lab-report-label">MilkWise Laboratory</div>
+                <div class="lab-report-subtitle">Colorimetric screening record — not a certified lab report</div>
+              </div>
             </div>
             <div class="lab-report-meta">
               <div class="lab-report-id" id="labReportId">Report #—</div>
               <div class="lab-report-date" id="labReportDate">—</div>
-              <div class="lab-report-source" id="labReportSource" style="display:none;"></div>
             </div>
           </div>
-        </div>
+          <dl class="report-particulars">
+            <div>
+              <dt>Sample</dt>
+              <dd id="reportSampleName">—</dd>
+            </div>
+            <div>
+              <dt>Milk source</dt>
+              <dd id="reportMilkSource">—</dd>
+            </div>
+            <div>
+              <dt>Analyte tested</dt>
+              <dd id="reportAnalyte">—</dd>
+            </div>
+            <div>
+              <dt>Analyst</dt>
+              <dd id="reportAnalyst">—</dd>
+            </div>
+          </dl>
+        </header>
 
         <div class="status-banner pure" id="statusBanner">
           <div class="status-badge-text">
@@ -58,19 +78,19 @@
             <div class="triad-box">
               <div class="triad-swatch" id="sampledSwatchBox"></div>
               <div class="triad-label">Your strip pad</div>
-              <div class="triad-hex" id="sampledHexText">#000000</div>
+              <div class="triad-hex copyable" id="sampledHexText" data-copy="" title="Copy hex">#000000</div>
               <div class="triad-metric" id="sampledMetricText">Sampled color</div>
             </div>
             <div class="triad-box">
               <div class="triad-swatch" id="pureSwatchBox"></div>
               <div class="triad-label">Normal (left standard)</div>
-              <div class="triad-hex" id="pureHexText">#000000</div>
+              <div class="triad-hex copyable" id="pureHexText" data-copy="" title="Copy hex">#000000</div>
               <div class="triad-metric" id="pureDistMetric">ΔE: 0</div>
             </div>
             <div class="triad-box">
               <div class="triad-swatch" id="adultSwatchBox"></div>
               <div class="triad-label">Adulterated (right standard)</div>
-              <div class="triad-hex" id="adultHexText">#000000</div>
+              <div class="triad-hex copyable" id="adultHexText" data-copy="" title="Copy hex">#000000</div>
               <div class="triad-metric" id="adultDistMetric">ΔE: 0</div>
             </div>
           </div>
@@ -109,14 +129,23 @@
         </div>
 
         <div class="lab-report-footer">
-          <div class="lab-signoff-note">
-            <span><strong>Result guide:</strong></span>
-            <span class="term-mini negative-term">NEGATIVE</span> = Pure &amp; safe &nbsp;|&nbsp;
-            <span class="term-mini positive-term">POSITIVE</span> = Adulterated
-          </div>
-          <div class="lab-doctor-signoff">
-            <div class="signoff-name">PureMilk AI Engine</div>
-            <div class="signoff-role">Colorimetric Analyzer v2.0</div>
+          <p class="print-disclaimer">
+            This is a digital color-match screening record, not an accredited laboratory certificate and not an FSSAI test report.
+            <span class="term-mini negative-term">NEGATIVE</span> = closer to the normal pad &nbsp;
+            <span class="term-mini positive-term">POSITIVE</span> = closer to the adulterated pad.
+            Confirm with an accredited laboratory where legally required.
+          </p>
+          <div class="print-signatures">
+            <div>
+              <div class="sign-line"></div>
+              <div class="signoff-name" id="reportAnalystSign">Analyst</div>
+              <div class="signoff-role">Authorized analyst</div>
+            </div>
+            <div>
+              <div class="sign-line"></div>
+              <div class="signoff-name">MilkWise Laboratory</div>
+              <div class="signoff-role">Colorimetric analysis</div>
+            </div>
           </div>
         </div>
       </article>
@@ -125,3 +154,65 @@
 </main>
 
 <%- include('partials/footer') %>
+
+<section class="print-sheet" id="printSheet" aria-hidden="true">
+  <aside class="ps-rail"><span>MilkWise Laboratory · Screening certificate · Not a wet-lab substitute</span></aside>
+  <div class="ps-page">
+    <div class="ps-stub">
+      <span class="ps-serial" id="psSerial">MW-0000</span>
+      <span class="ps-issued" id="psIssued">—</span>
+    </div>
+
+    <header class="ps-head">
+      <p class="ps-kicker">Instrument of analysis</p>
+      <h1>Certificate of milk purity</h1>
+      <p class="ps-sub">Colorimetric pad matching against calibrated hex standards</p>
+    </header>
+
+    <div class="ps-verdict is-negative" id="psVerdictWrap">
+      <p class="ps-verdict-word" id="psVerdict">NEGATIVE</p>
+      <p class="ps-verdict-mean" id="psVerdictMean">No adulterant detected in the sampled pad</p>
+      <div class="ps-stamp" id="psStamp">PASSED</div>
+    </div>
+
+    <table class="ps-ledger">
+      <tbody>
+        <tr>
+          <th>Sample</th><td id="psSample">—</td>
+          <th>Source</th><td id="psSource">—</td>
+        </tr>
+        <tr>
+          <th>Analyte</th><td id="psAnalyte">—</td>
+          <th>Confidence</th><td id="psConfidence">—</td>
+        </tr>
+        <tr>
+          <th>Method</th>
+          <td colspan="3">ΔE nearest-neighbour · left pad = normal</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="ps-chips">
+      <figure>
+        <div class="ps-chip" id="psChipSampled"></div>
+        <figcaption>Sampled pad<br><code id="psHexSampled">—</code></figcaption>
+      </figure>
+      <figure>
+        <div class="ps-chip" id="psChipPure"></div>
+        <figcaption>Normal standard<br><code id="psHexPure">—</code><br><span id="psDePure"></span></figcaption>
+      </figure>
+      <figure>
+        <div class="ps-chip" id="psChipAdult"></div>
+        <figcaption>Adulterated standard<br><code id="psHexAdult">—</code><br><span id="psDeAdult"></span></figcaption>
+      </figure>
+    </div>
+
+    <p class="ps-finding" id="psFinding">—</p>
+    <p class="ps-rule" id="psFssai">—</p>
+
+    <p class="ps-micro">
+      Screening record only — not a certified lab result or official FSSAI certificate. Reproduce in full. Enable background graphics when printing.
+      NEGATIVE = closer to the normal pad · POSITIVE = closer to the adulterated pad.
+    </p>
+  </div>
+</section>

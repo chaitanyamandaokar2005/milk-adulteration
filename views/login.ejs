@@ -1,15 +1,15 @@
 <%- include('partials/head') %>
 <%- include('partials/navbar') %>
 
-<main class="auth-page">
+<main class="auth-page" id="main">
   <div class="auth-split">
     <section class="auth-panel-copy">
       <p class="hero-tag">Welcome back</p>
-      <h1>Sign in to test strips and keep certificates</h1>
+      <h1>Sign in to MilkWise and keep certificates</h1>
       <p>Your dashboard stores every POSITIVE / NEGATIVE result with sampled pad colors and milk source.</p>
     </section>
     <section class="auth-panel-form">
-      <div class="card auth-card">
+      <div class="card auth-card paper-hover">
         <h2>Login</h2>
         <p class="auth-card-lead">Use your email or username.</p>
         <form id="loginForm">
@@ -19,7 +19,10 @@
           </div>
           <div class="form-group">
             <label class="form-label" for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required />
+            <div class="input-with-action">
+              <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required />
+              <button type="button" class="input-eye" data-password-toggle="loginPassword">Show</button>
+            </div>
           </div>
           <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:20px;">Log in</button>
         </form>

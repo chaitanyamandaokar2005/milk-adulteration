@@ -38,9 +38,6 @@ const StripUploader = {
   bindEvents() {
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('stripFileInput');
-    const autoSampleBtn = document.getElementById('autoSampleBtn');
-    const sampleLeftBtn = document.getElementById('sampleLeftBtn');
-    const sampleRightBtn = document.getElementById('sampleRightBtn');
     const analyzeBtn = document.getElementById('analyzeBtn');
     const resetBtn = document.getElementById('resetBtn');
     const chips = document.querySelectorAll('.chip-option');
@@ -69,18 +66,6 @@ const StripUploader = {
 
     if (this.canvas) {
       this.canvas.addEventListener('click', (e) => this.sampleColorAtEvent(e));
-    }
-
-    if (autoSampleBtn) {
-      autoSampleBtn.addEventListener('click', () => this.autoSampleReactionPad());
-    }
-
-    if (sampleLeftBtn) {
-      sampleLeftBtn.addEventListener('click', () => this.sampleLeftPad());
-    }
-
-    if (sampleRightBtn) {
-      sampleRightBtn.addEventListener('click', () => this.sampleRightPad());
     }
 
     chips.forEach((chip) => {
@@ -268,44 +253,6 @@ const StripUploader = {
     }).join('').toUpperCase();
 
     this.sampledColorHex = hex;
-    const swatch = document.getElementById('sampleSwatch');
-    const hexText = document.getElementById('sampleHex');
-    if (swatch) swatch.style.backgroundColor = hex;
-    if (hexText) hexText.textContent = hex;
-
-    this.evaluatePreviewMatch();
-  },
-
-  evaluatePreviewMatch() {
-    const pill = document.getElementById('previewMatchPill');
-    const tip = document.getElementById('sampleStatusTip');
-    if (!pill) return;
-
-    const std = this.STANDARDS[this.selectedAdulterantSlug] || this.STANDARDS.formalin;
-    const dPure = this.colorDist(this.sampledColorRgb, std.pure);
-    const dAdult = this.colorDist(this.sampledColorRgb, std.adult);
-
-    pill.style.display = 'inline-block';
-    if (dAdult < dPure) {
-      pill.textContent = '⚠ Matches: Adulterated (Positive)';
-      pill.className = 'preview-match-pill pill-adulterated';
-      if (tip) tip.textContent = 'Reaction pad matches adulterated standard';
-    } else {
-      pill.textContent = '✓ Matches: Normal / Pure (Negative)';
-      pill.className = 'preview-match-pill pill-pure';
-      if (tip) tip.textContent = 'Reaction pad matches normal pure standard';
-    }
-  },
-
-  colorDist(rgb1, rgb2) {
-    const rMean = (rgb1[0] + rgb2[0]) / 2;
-    const dR = rgb1[0] - rgb2[0];
-    const dG = rgb1[1] - rgb2[1];
-    const dB = rgb1[2] - rgb2[2];
-    const wR = 2 + (rMean / 256);
-    const wG = 4.0;
-    const wB = 2 + ((255 - rMean) / 256);
-    return Math.sqrt(wR * dR * dR + wG * dG * dG + wB * dB * dB);
   },
 
   resetWorkspace() {
@@ -321,13 +268,11 @@ const StripUploader = {
     const workspacePreview = document.getElementById('workspacePreview');
     const resetBtn = document.getElementById('resetBtn');
     const analyzeBtn = document.getElementById('analyzeBtn');
-    const pill = document.getElementById('previewMatchPill');
 
     if (dropzone) dropzone.style.display = 'block';
     if (workspacePreview) workspacePreview.style.display = 'none';
     if (resetBtn) resetBtn.style.display = 'none';
     if (analyzeBtn) analyzeBtn.disabled = true;
-    if (pill) pill.style.display = 'none';
   },
 
   async submitAnalysis() {
@@ -336,7 +281,7 @@ const StripUploader = {
       return;
     }
 
-    if (!window.Auth || !window.Auth.token) {
+    if (!window.Auth || !window.Auth.isSignedIn()) {
       showToast('Please sign in to run strip analysis.', 'error');
       window.location.href = '/login?next=/test';
       return;
@@ -366,9 +311,7 @@ const StripUploader = {
 
       const res = await fetch('/api/analyze/upload', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${window.Auth.token}`
-        },
+        credentials: 'same-origin',
         body: formData
       });
 

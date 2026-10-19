@@ -1,9 +1,44 @@
+const USER_KEY = 'milkwise_user';
+const TOKEN_KEY = 'milkwise_token';
+const LEGACY_TOKEN_KEY = 'puremilk_token';
+
 const Auth = {
   currentUser: null,
-  token: localStorage.getItem('puremilk_token') || null,
+
+  readStoredUser() {
+    try {
+      return JSON.parse(localStorage.getItem(USER_KEY) || 'null');
+    } catch (err) {
+      return null;
+    }
+  },
+
+  storeUser(user) {
+    this.currentUser = user || null;
+    if (user) localStorage.setItem(USER_KEY, JSON.stringify(user));
+    else localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(LEGACY_TOKEN_KEY);
+  },
+
+  clearSession() {
+    this.currentUser = null;
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(LEGACY_TOKEN_KEY);
+  },
+
+  isSignedIn() {
+    return !!this.currentUser;
+  },
 
   init() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(LEGACY_TOKEN_KEY);
+    this.currentUser = this.readStoredUser();
     this.bindEvents();
+    this.renderNav();
+    this.updateAuthGate();
     this.checkSession();
   },
 
@@ -22,28 +57,20 @@ const Auth = {
   },
 
   async checkSession() {
-    if (!this.token) {
-      this.renderNav();
-      this.updateAuthGate();
-      return;
-    }
-
+    const paintedUserId = this.currentUser && this.currentUser.id;
     try {
-      const res = await fetch('/api/auth/me', {
-        headers: { Authorization: `Bearer ${this.token}` }
-      });
+      const res = await fetch('/api/auth/me', { credentials: 'same-origin' });
       if (res.ok) {
         const data = await res.json();
-        this.currentUser = data.user;
+        this.storeUser(data.user);
+        if (paintedUserId !== data.user.id) this.renderNav();
       } else {
-        this.token = null;
-        localStorage.removeItem('puremilk_token');
-        this.currentUser = null;
+        this.clearSession();
+        this.renderNav();
       }
     } catch (err) {
       console.warn('Could not verify session:', err);
     }
-    this.renderNav();
     this.updateAuthGate();
   },
 
@@ -55,6 +82,7 @@ const Auth = {
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier, password })
       });
@@ -65,9 +93,7 @@ const Auth = {
         return;
       }
 
-      this.token = data.token;
-      this.currentUser = data.user;
-      localStorage.setItem('puremilk_token', data.token);
+      this.storeUser(data.user);
       showToast(`Welcome back, ${data.user.fullName || data.user.username}!`, 'success');
       window.location.href = this.nextPath();
     } catch (err) {
@@ -85,6 +111,7 @@ const Auth = {
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fullName, username, email, password })
       });
@@ -95,9 +122,7 @@ const Auth = {
         return;
       }
 
-      this.token = data.token;
-      this.currentUser = data.user;
-      localStorage.setItem('puremilk_token', data.token);
+      this.storeUser(data.user);
       showToast('Account registered successfully!', 'success');
       window.location.href = this.nextPath();
     } catch (err) {
@@ -106,10 +131,8 @@ const Auth = {
   },
 
   logout() {
-    this.token = null;
-    this.currentUser = null;
-    localStorage.removeItem('puremilk_token');
-    fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+    this.clearSession();
+    fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
     showToast('You have been logged out.', 'info');
     window.location.href = '/';
   },
@@ -119,7 +142,7 @@ const Auth = {
     const uploadFormArea = document.getElementById('uploadFormArea');
     const dashLoggedIn = document.getElementById('dashboardLoggedIn');
     const dashLoggedOut = document.getElementById('dashboardLoggedOut');
-    const isLoggedIn = !!this.currentUser;
+    const isLoggedIn = this.isSignedIn();
 
     if (authGateOverlay) authGateOverlay.style.display = isLoggedIn ? 'none' : 'flex';
     if (uploadFormArea) uploadFormArea.style.display = isLoggedIn ? 'block' : 'none';
@@ -131,12 +154,19 @@ const Auth = {
     const container = document.getElementById('authContainer');
     if (!container) return;
 
+    const escapeHtml = (value) => String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+
     if (this.currentUser) {
+      const label = escapeHtml(this.currentUser.fullName || this.currentUser.username);
       const initial = (this.currentUser.fullName || this.currentUser.username || 'U')[0].toUpperCase();
       container.innerHTML = `
         <div class="user-badge">
-          <div class="user-avatar">${initial}</div>
-          <span class="user-name">${this.currentUser.fullName || this.currentUser.username}</span>
+          <div class="user-avatar">${escapeHtml(initial)}</div>
+          <span class="user-name">${label}</span>
           <button class="btn btn-ghost btn-sm" id="logoutBtn" title="Logout" type="button">Exit</button>
         </div>
       `;

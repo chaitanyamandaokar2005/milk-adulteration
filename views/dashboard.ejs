@@ -1,7 +1,7 @@
 <%- include('partials/head') %>
 <%- include('partials/navbar') %>
 
-<main class="page-shell dashboard-page">
+<main class="page-shell dashboard-page" id="main">
   <div class="container">
     <header class="page-intro">
       <p class="hero-tag">Personal records</p>
@@ -23,19 +23,19 @@
         </div>
 
         <div class="dash-stats-grid">
-          <div class="dash-stat-card">
+          <div class="dash-stat-card reveal">
             <div class="dash-stat-value" id="dashTotalTests">0</div>
             <div class="dash-stat-label">Total tests</div>
           </div>
-          <div class="dash-stat-card safe">
+          <div class="dash-stat-card safe reveal">
             <div class="dash-stat-value" id="dashPureCount">0</div>
             <div class="dash-stat-label">NEGATIVE (pure)</div>
           </div>
-          <div class="dash-stat-card danger">
+          <div class="dash-stat-card danger reveal">
             <div class="dash-stat-value" id="dashAdultCount">0</div>
             <div class="dash-stat-label">POSITIVE (adulterated)</div>
           </div>
-          <div class="dash-stat-card">
+          <div class="dash-stat-card reveal">
             <div class="dash-stat-value" id="dashAvgConfidence">0%</div>
             <div class="dash-stat-label">Avg confidence</div>
           </div>

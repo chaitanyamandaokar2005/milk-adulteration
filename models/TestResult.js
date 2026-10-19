@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const { isMongo, localDB } = require('../config/db');
 
 const testResultSchema = new mongoose.Schema({
-  userId: { type: String, default: 'guest' },
+  userId: { type: String, default: 'guest', index: true },
   userEmail: { type: String, default: 'guest@example.com' },
   adulterantSlug: { type: String, required: true },
   adulterantName: { type: String, required: true },
@@ -28,42 +27,34 @@ const testResultSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+testResultSchema.index({ userId: 1, createdAt: -1 });
+
+testResultSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform(_doc, ret) {
+    ret.id = String(ret._id);
+    return ret;
+  }
+});
+
 const MongoTestResult = mongoose.model('TestResult', testResultSchema);
 
 class TestResultModel {
   static async create(data) {
-    if (isMongo()) {
-      return await MongoTestResult.create(data);
-    } else {
-      const record = { ...data, createdAt: new Date() };
-      const saved = await localDB.tests.insert(record);
-      return saved;
-    }
+    return MongoTestResult.create(data);
   }
 
   static async find(query = {}) {
-    if (isMongo()) {
-      return await MongoTestResult.find(query).sort({ createdAt: -1 });
-    } else {
-      const results = await localDB.tests.find(query);
-      return results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    }
+    return MongoTestResult.find(query).sort({ createdAt: -1 });
   }
 
   static async findById(id) {
-    if (isMongo()) {
-      return await MongoTestResult.findById(id);
-    } else {
-      return await localDB.tests.findOne({ _id: id });
-    }
+    return MongoTestResult.findById(id);
   }
 
   static async deleteById(id, userId) {
-    if (isMongo()) {
-      return await MongoTestResult.findOneAndDelete({ _id: id, userId });
-    } else {
-      return await localDB.tests.remove({ _id: id, userId });
-    }
+    return MongoTestResult.findOneAndDelete({ _id: id, userId });
   }
 }
 

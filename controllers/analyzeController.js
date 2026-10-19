@@ -15,9 +15,9 @@ function deriveLabTerminology(detectedStatus) {
 
 function getTerminologyDescription(terminology) {
   if (terminology === 'NEGATIVE') {
-    return 'No adulterant detected — Milk sample conforms to FSSAI safety parameters and is safe for consumption.';
+    return 'Pad color is closer to the normal standard. This is a screening result, not a certified laboratory finding.';
   }
-  return 'Adulterant detected — Milk sample is classified as Adulterated / Non-Conforming under FSSAI regulations.';
+  return 'Pad color is closer to the adulterated standard. Treat as a screening alert and confirm with an accredited lab if required.';
 }
 
 const analyzeStrip = async (req, res) => {
@@ -38,7 +38,7 @@ const analyzeStrip = async (req, res) => {
       return res.status(400).json({ error: 'Milk source / supplier is required for traceability.' });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const imageUrl = req.file.publicUrl || `/uploads/${req.file.filename}`;
 
     // Load adulterants from DB
     const allAdulterants = await AdulterantModel.find({});
@@ -95,7 +95,7 @@ const analyzeStrip = async (req, res) => {
     const terminologyDescription = getTerminologyDescription(labTerminology);
 
     // Generate unique report ID
-    const reportId = `PMA-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+    const reportId = `MW-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
 
     const testRecordData = {
       userId: req.user.id,

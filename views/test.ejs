@@ -1,22 +1,15 @@
 <%- include('partials/head') %>
 <%- include('partials/navbar') %>
 
-<main class="page-shell test-page">
+<main class="page-shell test-page" id="main">
   <div class="container test-layout">
     <header class="page-intro">
       <p class="hero-tag">Strip analyzer</p>
       <h1>Match pad color to a lab standard</h1>
-      <p>Upload one strip photo, confirm the sampled color, then choose which adulterant you tested. Results open on a separate report page.</p>
+      <p>Upload one strip photo, confirm the sampled color, then choose which adulterant you tested. Results are a color-match screen, not an accredited lab certificate.</p>
     </header>
 
-    <ol class="progress-steps" aria-label="Test steps">
-      <li class="is-active">Upload</li>
-      <li>Sample color</li>
-      <li>Analyze</li>
-      <li>Result page</li>
-    </ol>
-
-    <div class="card test-card" id="uploadWindow">
+    <div class="card test-card reveal is-in" id="uploadWindow">
       <div class="card-header">
         <h2 class="card-title">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -52,21 +45,6 @@
         <div class="workspace-preview" id="workspacePreview">
           <div class="canvas-wrapper">
             <canvas id="stripCanvas"></canvas>
-          </div>
-          <div class="canvas-toolbar">
-            <div class="sampled-preview-box">
-              <span class="color-swatch-circle" id="sampleSwatch"></span>
-              <div>
-                <div class="color-hex-tag" id="sampleHex">#E5E5E5</div>
-                <span class="canvas-tip" id="sampleStatusTip">Click anywhere on the pad</span>
-              </div>
-              <span class="preview-match-pill" id="previewMatchPill" style="display:none;"></span>
-            </div>
-            <div class="canvas-toolbar-actions">
-              <button type="button" class="btn btn-outline btn-sm" id="sampleLeftBtn" title="Sample Left Pad (Normal Control)">Left (Normal)</button>
-              <button type="button" class="btn btn-outline btn-sm" id="sampleRightBtn" title="Sample Right Pad (Adulterated)">Right (Adulterated)</button>
-              <button type="button" class="btn btn-ghost btn-sm" id="autoSampleBtn">Auto</button>
-            </div>
           </div>
         </div>
 

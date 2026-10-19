@@ -2,6 +2,22 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/User');
 const { JWT_SECRET } = require('../middleware/auth');
+const { authCookieOptions, authCookieClearOptions, isProd } = require('../config/cookies');
+
+function publicUser(user) {
+  return {
+    id: user._id.toString(),
+    username: user.username,
+    email: user.email,
+    fullName: user.fullName || user.username
+  };
+}
+
+function sessionPayload(message, token, user) {
+  const body = { message, user: publicUser(user) };
+  if (!isProd()) body.token = token;
+  return body;
+}
 
 const register = async (req, res) => {
   try {
@@ -11,12 +27,18 @@ const register = async (req, res) => {
       return res.status(400).json({ error: 'Please provide username, email, and password.' });
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters long.' });
     }
 
     const cleanEmail = email.toLowerCase().trim();
     const cleanUsername = username.toLowerCase().trim();
+    if (!/^[a-z0-9._-]{3,32}$/.test(cleanUsername)) {
+      return res.status(400).json({ error: 'Username must be 3–32 characters: letters, numbers, dot, underscore, or hyphen.' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      return res.status(400).json({ error: 'Enter a valid email address.' });
+    }
 
     // Check existing
     const existingEmail = await UserModel.findOne({ email: cleanEmail });
@@ -42,25 +64,17 @@ const register = async (req, res) => {
     const token = jwt.sign(
       { id: newUser._id.toString(), username: newUser.username },
       JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '3d' }
     );
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    res.set('Cache-Control', 'no-store');
+    res.cookie('token', token, authCookieOptions());
 
-    return res.status(201).json({
-      message: 'Account registered successfully!',
-      token,
-      user: {
-        id: newUser._id.toString(),
-        username: newUser.username,
-        email: newUser.email,
-        fullName: newUser.fullName
-      }
-    });
+    return res.status(201).json(sessionPayload('Account registered successfully!', token, newUser));
   } catch (err) {
+    if (err && err.code === 11000) {
+      return res.status(400).json({ error: 'An account with this email or username already exists.' });
+    }
     console.error('Registration error:', err);
     return res.status(500).json({ error: 'Server error during registration. Please try again.' });
   }
@@ -83,35 +97,24 @@ const login = async (req, res) => {
     }
 
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials. User not found.' });
+      return res.status(401).json({ error: 'Invalid email/username or password.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials. Incorrect password.' });
+      return res.status(401).json({ error: 'Invalid email/username or password.' });
     }
 
     const token = jwt.sign(
       { id: user._id.toString(), username: user.username },
       JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '3d' }
     );
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    res.set('Cache-Control', 'no-store');
+    res.cookie('token', token, authCookieOptions());
 
-    return res.json({
-      message: 'Login successful!',
-      token,
-      user: {
-        id: user._id.toString(),
-        username: user.username,
-        email: user.email,
-        fullName: user.fullName || user.username
-      }
-    });
+    return res.json(sessionPayload('Login successful!', token, user));
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ error: 'Server error during login. Please try again.' });
@@ -120,6 +123,7 @@ const login = async (req, res) => {
 
 const getMe = async (req, res) => {
   try {
+    res.set('Cache-Control', 'no-store');
     return res.json({ user: req.user });
   } catch (err) {
     return res.status(500).json({ error: 'Failed to fetch user data.' });
@@ -127,7 +131,8 @@ const getMe = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.clearCookie('token');
+  res.set('Cache-Control', 'no-store');
+  res.clearCookie('token', authCookieClearOptions());
   return res.json({ message: 'Logged out successfully.' });
 };
 

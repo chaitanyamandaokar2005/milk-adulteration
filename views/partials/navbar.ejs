@@ -1,15 +1,29 @@
   <header class="navbar<%= (layout === 'auth') ? ' navbar-auth' : '' %>">
-    <div class="container nav-container">
+    <div class="container">
+    <div class="nav-container">
       <a href="/" class="brand-logo">
-        <div class="brand-icon">🥛</div>
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 3c4.4 6.6 9.5 11 9.5 17.4A9.5 9.5 0 1 1 6.5 20.4C6.5 14 11.6 9.6 16 3z" fill="url(#mw)"/>
+            <path d="M12 15c2.2-1.1 5.4-1.6 8.4 1" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".75"/>
+            <defs>
+              <linearGradient id="mw" x1="7" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0F5C4C"/>
+                <stop offset="1" stop-color="#1F7A64"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
         <div class="brand-text">
-          <h1>PureMilk AI</h1>
+          <h1>MilkWise</h1>
           <span>Strip color analyzer</span>
         </div>
       </a>
 
       <% if (layout !== 'auth') { %>
-      <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu">☰</button>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
 
       <ul class="nav-links" id="navLinks">
         <li><a href="/" class="<%= page === 'home' ? 'active' : '' %>">Home</a></li>
@@ -21,17 +35,11 @@
       <% } %>
 
       <div class="nav-actions">
-        <% if (layout !== 'auth') { %>
-        <div class="db-pill" id="dbStatusPill" title="Database status">
-          <span class="db-dot" id="dbDot"></span>
-          <span id="dbModeText">Connecting...</span>
-        </div>
-        <% } %>
-
         <div id="authContainer">
           <a class="btn btn-outline btn-sm" href="/login">Login</a>
           <a class="btn btn-primary btn-sm" href="/register">Sign Up</a>
         </div>
       </div>
+    </div>
     </div>
   </header>

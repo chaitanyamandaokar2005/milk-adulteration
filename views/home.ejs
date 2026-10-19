@@ -1,15 +1,16 @@
 <%- include('partials/head') %>
 <%- include('partials/navbar') %>
 
-<main class="home-main">
+<main class="home-main" id="main">
   <section class="home-hero">
     <div class="container home-hero-grid">
       <div>
-        <p class="hero-tag">Color-match strip screening</p>
-        <h1 class="home-title">Upload a test strip.<br>Get <span>positive or negative</span> in seconds.</h1>
+        <p class="hero-tag">Field strip · lab readout</p>
+        <h1 class="home-title">Photograph the pad.<br>Read <em>positive</em> or <em>negative</em>.</h1>
         <p class="home-lead">
           Photograph the chemical pad, pick the adulterant you tested, and we compare the sampled color
           with calibrated pure vs adulterated hex codes for formalin, urea, starch, and detergent.
+          Screening only — not a certified laboratory or FSSAI test report.
         </p>
         <div class="home-cta">
           <a class="btn btn-primary btn-lg" href="/test">Start a strip test</a>
@@ -22,21 +23,21 @@
         </ul>
       </div>
 
-      <aside class="home-preview-card">
-        <div class="home-preview-label">How a result looks</div>
+      <aside class="home-preview-card js-tilt" id="homeDemo" role="button" tabindex="0" aria-label="Toggle sample result">
+        <div class="home-preview-label">How a result looks <span class="home-demo-toggle" id="homeDemoHint">click to flip</span></div>
         <div class="status-banner pure home-demo-banner">
           <div class="status-badge-text">
-            <span style="font-size:28px;">✓</span>
+            <span id="homeDemoIcon" style="font-size:28px;">✓</span>
             <div>
-              <h3>NEGATIVE — PURE MILK</h3>
-              <p>Pad color matches the normal standard</p>
+              <h3 id="homeDemoHeading">NEGATIVE — PURE MILK</h3>
+              <p id="homeDemoSub">Pad color matches the normal standard</p>
             </div>
           </div>
-          <span class="result-terminology-badge negative-badge">NEGATIVE</span>
+          <span class="result-terminology-badge negative-badge" id="homeDemoBadge">NEGATIVE</span>
         </div>
         <div class="color-triad home-demo-triad">
           <div class="triad-box">
-            <div class="triad-swatch" style="background:#5A051E;"></div>
+            <div class="triad-swatch" id="homePadSwatch" style="background:#5A051E;"></div>
             <div class="triad-label">Your pad</div>
           </div>
           <div class="triad-box">
@@ -48,7 +49,7 @@
             <div class="triad-label">Adulterated</div>
           </div>
         </div>
-        <p class="home-preview-note">Closer ΔE to the left swatch → NEGATIVE. Closer to the right swatch → POSITIVE.</p>
+        <p class="home-preview-note" id="homeDemoNote">Closer ΔE to the left swatch → NEGATIVE. Click the card to see a POSITIVE match.</p>
       </aside>
     </div>
   </section>
@@ -57,17 +58,17 @@
     <div class="container">
       <h2 class="section-kicker">Three steps</h2>
       <div class="steps-grid">
-        <article class="step-card">
+        <article class="step-card paper-hover reveal">
           <span class="step-num">1</span>
           <h3>Upload the strip</h3>
           <p>Drop a PNG, JPG, or WebP photo of the finished chemical test strip.</p>
         </article>
-        <article class="step-card">
+        <article class="step-card paper-hover reveal">
           <span class="step-num">2</span>
           <h3>Sample the pad color</h3>
           <p>Auto-sample the reaction zone, or click the pad if the photo is cropped oddly.</p>
         </article>
-        <article class="step-card">
+        <article class="step-card paper-hover reveal">
           <span class="step-num">3</span>
           <h3>Read POSITIVE / NEGATIVE</h3>
           <p>The result page shows the match against the left (pure) and right (adulterated) standards.</p>
@@ -87,7 +88,7 @@
       </div>
       <div class="home-test-grid">
         <% (adulterants || []).forEach(function(item) { %>
-        <a class="home-test-card" href="/test">
+        <a class="home-test-card paper-hover reveal" href="/test">
           <div class="home-test-swatches">
             <span style="background:<%= item.pureColor.hex %>;" title="Normal"></span>
             <span style="background:<%= item.adulteratedColor.hex %>;" title="Adulterated"></span>

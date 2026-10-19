@@ -6,7 +6,18 @@
         <!-- Brand Info -->
         <div class="footer-col footer-col-brand">
           <a href="/" class="footer-brand">
-            <span class="footer-brand-icon">🥛</span>
+            <span class="footer-brand-icon brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M16 3c4.4 6.6 9.5 11 9.5 17.4A9.5 9.5 0 1 1 6.5 20.4C6.5 14 11.6 9.6 16 3z" fill="url(#mwf)"/>
+                <path d="M12 15c2.2-1.1 5.4-1.6 8.4 1" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".75"/>
+                <defs>
+                  <linearGradient id="mwf" x1="7" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#0F5C4C"/>
+                    <stop offset="1" stop-color="#1F7A64"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </span>
             <div class="footer-brand-text">
               <span class="footer-brand-title">MilkWise</span>
               <span class="footer-brand-tagline">Milk Purity Intelligence</span>
@@ -27,65 +38,77 @@
           </div>
         </div>
 
-        <!-- Navigation Links -->
         <div class="footer-col">
           <h4 class="footer-heading">Platform</h4>
           <ul class="footer-nav-list">
-            <li><a href="/" class="footer-link">Home Overview</a></li>
-            <li><a href="/test" class="footer-link">Run Strip Test</a></li>
-            <li><a href="/calibration" class="footer-link">Color Standards</a></li>
-            <li><a href="/adulterants" class="footer-link">Adulterants Guide</a></li>
-            <li><a href="/dashboard" class="footer-link">Test Dashboard</a></li>
+            <li><a href="/" class="footer-link<%= page === 'home' ? ' is-current' : '' %>">Home Overview</a></li>
+            <li><a href="/test" class="footer-link<%= page === 'test' ? ' is-current' : '' %>">Run Strip Test</a></li>
+            <li><a href="/calibration" class="footer-link<%= page === 'calibration' ? ' is-current' : '' %>">Color Standards</a></li>
+            <li><a href="/adulterants" class="footer-link<%= page === 'adulterants' ? ' is-current' : '' %>">Adulterants Guide</a></li>
+            <li><a href="/dashboard" class="footer-link<%= page === 'dashboard' ? ' is-current' : '' %>">Test Dashboard</a></li>
           </ul>
         </div>
 
-        <!-- Calibration Standards Summary -->
         <div class="footer-col">
           <h4 class="footer-heading">4 Calibrated Standards</h4>
+          <p class="footer-hint">Hover for hex. Click to copy the pair.</p>
           <div class="footer-standards-list">
-            <div class="footer-std-item">
+            <button type="button" class="footer-std-item" data-name="Formalin" data-pure="#5A051E" data-adult="#3E1A58">
               <span class="std-swatch-pair">
-                <i style="background:#5A051E;" title="Pure Control (Normal)"></i>
-                <i style="background:#3E1A58;" title="Adulterated"></i>
+                <i style="background:#5A051E;"></i>
+                <i style="background:#3E1A58;"></i>
               </span>
-              <span class="std-name">1. Formalin (Preservative)</span>
-            </div>
-            <div class="footer-std-item">
+              <span class="std-copy">
+                <span class="std-name">Formalin</span>
+                <span class="std-hexes">#5A051E → #3E1A58</span>
+              </span>
+            </button>
+            <button type="button" class="footer-std-item" data-name="Urea" data-pure="#B6B3A4" data-adult="#B0B63B">
               <span class="std-swatch-pair">
-                <i style="background:#B6B3A4;" title="Pure Control (Normal)"></i>
-                <i style="background:#B0B63B;" title="Adulterated"></i>
+                <i style="background:#B6B3A4;"></i>
+                <i style="background:#B0B63B;"></i>
               </span>
-              <span class="std-name">2. Urea (Nitrogen)</span>
-            </div>
-            <div class="footer-std-item">
+              <span class="std-copy">
+                <span class="std-name">Urea</span>
+                <span class="std-hexes">#B6B3A4 → #B0B63B</span>
+              </span>
+            </button>
+            <button type="button" class="footer-std-item" data-name="Starch" data-pure="#594214" data-adult="#120F0B">
               <span class="std-swatch-pair">
-                <i style="background:#594214;" title="Pure Control (Normal)"></i>
-                <i style="background:#120F0B;" title="Adulterated"></i>
+                <i style="background:#594214;"></i>
+                <i style="background:#120F0B;"></i>
               </span>
-              <span class="std-name">3. Starch (Thickener)</span>
-            </div>
-            <div class="footer-std-item">
+              <span class="std-copy">
+                <span class="std-name">Starch</span>
+                <span class="std-hexes">#594214 → #120F0B</span>
+              </span>
+            </button>
+            <button type="button" class="footer-std-item" data-name="Detergent" data-pure="#856E72" data-adult="#3A3B39">
               <span class="std-swatch-pair">
-                <i style="background:#856E72;" title="Pure Control (Normal)"></i>
-                <i style="background:#3A3B39;" title="Adulterated"></i>
+                <i style="background:#856E72;"></i>
+                <i style="background:#3A3B39;"></i>
               </span>
-              <span class="std-name">4. Detergent (Emulsifier)</span>
-            </div>
+              <span class="std-copy">
+                <span class="std-name">Detergent</span>
+                <span class="std-hexes">#856E72 → #3A3B39</span>
+              </span>
+            </button>
           </div>
         </div>
 
-        <!-- Safety & Disclaimer -->
         <div class="footer-col">
           <h4 class="footer-heading">Diagnostic Notice</h4>
           <p class="footer-notice-text">
-            MilkWise provides rapid digital screening by comparing chemical reaction pads against calibrated hex colorimetry.
+            Screening language only. MilkWise matches pad color; it is not an accredited laboratory.
           </p>
-          <div class="footer-compliance-card">
-            <span class="comp-icon">⚖️</span>
-            <div>
-              <strong>Binary Diagnosis:</strong>
-              <p>Strictly reports <strong>NEGATIVE</strong> (safe/pure milk) or <strong>POSITIVE</strong> (adulterated/unsafe).</p>
+          <div class="footer-verdict" id="footerVerdict">
+            <div class="footer-verdict-tabs" role="tablist">
+              <button type="button" class="is-on" data-term="negative" role="tab" aria-selected="true">NEGATIVE</button>
+              <button type="button" data-term="positive" role="tab" aria-selected="false">POSITIVE</button>
             </div>
+            <p class="footer-verdict-copy" id="footerVerdictCopy">
+              NEGATIVE — pad matches the normal standard. Milk is treated as pure for this analyte.
+            </p>
           </div>
         </div>
 
@@ -94,12 +117,13 @@
       <!-- Bottom Bar -->
       <div class="footer-bottom-bar">
         <div class="footer-copy">
-          &copy; <%= new Date().getFullYear() %> <strong>MilkWise</strong>. Precision Food Safety Intelligence.
+          &copy; <%= new Date().getFullYear() %> <strong>MilkWise</strong>. Colorimetric screening tool.
         </div>
         <div class="footer-meta-tags">
-          <span class="meta-tag">FSSAI Zero-Tolerance Mode</span>
+          <span class="meta-tag">Not a certified lab report</span>
           <span class="meta-tag">Left: Normal / Right: Adulterated</span>
         </div>
+        <button type="button" class="footer-top" id="footerTopBtn">Back to top</button>
       </div>
     </div>
   </footer>

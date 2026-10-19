@@ -11,14 +11,19 @@ function toPlain(doc) {
 }
 
 async function loadAdulterants() {
-  const list = await AdulterantModel.find({});
-  return list
-    .map(toPlain)
-    .sort((a, b) => {
-      const idxA = ORDER.indexOf(a.slug);
-      const idxB = ORDER.indexOf(b.slug);
-      return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
-    });
+  try {
+    const list = await AdulterantModel.find({});
+    return list
+      .map(toPlain)
+      .sort((a, b) => {
+        const idxA = ORDER.indexOf(a.slug);
+        const idxB = ORDER.indexOf(b.slug);
+        return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
+      });
+  } catch (err) {
+    console.error('Failed to load adulterants for page render:', err.message);
+    return [];
+  }
 }
 
 function pageLocals(page, title, extra = {}) {

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/User');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'milk_safety_detector_secret_key_2026_xyz';
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-only-milkwise-secret-change-me';
 
 const requireAuth = async (req, res, next) => {
   let token = null;
@@ -64,7 +64,7 @@ const optionalAuth = async (req, res, next) => {
     req.user = {
       id: 'guest',
       username: 'Guest User',
-      email: 'guest@milkanalysis.local',
+      email: 'guest@milkwise.local',
       fullName: 'Guest Tester'
     };
   }

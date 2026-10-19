@@ -1,7 +1,7 @@
 <%- include('partials/head') %>
 <%- include('partials/navbar') %>
 
-<main class="page-shell calib-page">
+<main class="page-shell calib-page" id="main">
   <div class="container">
     <header class="page-intro">
       <p class="hero-tag">Laboratory color standards</p>
@@ -12,14 +12,14 @@
       </p>
     </header>
 
-    <div class="legend-row">
-      <div class="legend-chip legend-pure">Left pad — Normal / pure milk</div>
-      <div class="legend-chip legend-adult">Right pad — Adulterated</div>
+    <div class="legend-row" id="calibLegend">
+      <button type="button" class="legend-chip legend-pure is-on" data-pane="pure">Left pad — Normal / pure milk</button>
+      <button type="button" class="legend-chip legend-adult is-on" data-pane="adult">Right pad — Adulterated</button>
     </div>
 
     <div class="calib-grid">
       <% (adulterants || []).forEach(function(item, idx) { %>
-      <article class="calib-card">
+      <article class="calib-card paper-hover reveal">
         <header class="calib-card-head">
           <span class="calib-index"><%= idx + 1 %></span>
           <div>
@@ -34,7 +34,7 @@
             <div class="color-pane-swatch" style="background: <%= item.pureColor.hex %>;"></div>
             <div class="color-pane-meta">
               <span class="color-name"><%= item.pureColor.name %></span>
-              <code class="hex-code"><%= item.pureColor.hex %></code>
+              <code class="hex-code copyable" data-copy="<%= item.pureColor.hex %>" title="Copy hex"><%= item.pureColor.hex %></code>
               <span class="rgb-code">RGB <%= (item.pureColor.rgb || []).join(', ') %></span>
             </div>
           </div>
@@ -43,7 +43,7 @@
             <div class="color-pane-swatch" style="background: <%= item.adulteratedColor.hex %>;"></div>
             <div class="color-pane-meta">
               <span class="color-name"><%= item.adulteratedColor.name %></span>
-              <code class="hex-code"><%= item.adulteratedColor.hex %></code>
+              <code class="hex-code copyable" data-copy="<%= item.adulteratedColor.hex %>" title="Copy hex"><%= item.adulteratedColor.hex %></code>
               <span class="rgb-code">RGB <%= (item.adulteratedColor.rgb || []).join(', ') %></span>
             </div>
           </div>

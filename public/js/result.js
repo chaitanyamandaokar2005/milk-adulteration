@@ -18,27 +18,29 @@ const ResultViewer = {
 
     const labReportId = document.getElementById('labReportId');
     const labReportDate = document.getElementById('labReportDate');
-    const labReportSource = document.getElementById('labReportSource');
 
     if (labReportId) {
       labReportId.textContent = result.reportId
         ? `Report #${result.reportId}`
-        : `Report #PMA-${Date.now().toString().slice(-6)}`;
+        : `Report #MW-${Date.now().toString().slice(-6)}`;
     }
     if (labReportDate) {
       const dateVal = result.createdAt ? new Date(result.createdAt) : new Date();
       labReportDate.textContent = dateVal.toLocaleDateString(undefined, {
-        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
       });
     }
-    if (labReportSource) {
-      if (result.milkSource) {
-        labReportSource.textContent = `Source: ${result.milkSource}`;
-        labReportSource.style.display = 'block';
-      } else {
-        labReportSource.style.display = 'none';
-      }
-    }
+
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value || '—';
+    };
+    const analyst = result.user?.fullName || result.user?.username || 'MilkWise analyst';
+    setText('reportSampleName', result.sampleName);
+    setText('reportMilkSource', result.milkSource);
+    setText('reportAnalyte', result.adulterant?.name);
+    setText('reportAnalyst', analyst);
+    setText('reportAnalystSign', analyst);
 
     const isPositive = result.labTerminology === 'POSITIVE' || result.detectedStatus === 'ADULTERATED';
     const banner = document.getElementById('statusBanner');
@@ -90,14 +92,23 @@ const ResultViewer = {
     const adultDistMetric = document.getElementById('adultDistMetric');
 
     if (sampledSwatchBox) sampledSwatchBox.style.backgroundColor = result.sampledColor?.hex || '#ccc';
-    if (sampledHexText) sampledHexText.textContent = result.sampledColor?.hex || '#ccc';
+    if (sampledHexText) {
+      sampledHexText.textContent = result.sampledColor?.hex || '#ccc';
+      sampledHexText.dataset.copy = result.sampledColor?.hex || '';
+    }
     if (pureSwatchBox) pureSwatchBox.style.backgroundColor = result.adulterant?.pureColor?.hex || '#ccc';
-    if (pureHexText) pureHexText.textContent = result.adulterant?.pureColor?.hex || '#ccc';
+    if (pureHexText) {
+      pureHexText.textContent = result.adulterant?.pureColor?.hex || '#ccc';
+      pureHexText.dataset.copy = result.adulterant?.pureColor?.hex || '';
+    }
     if (pureDistMetric) {
       pureDistMetric.textContent = `ΔE: ${result.distanceToPure ?? '-'} (${result.pureMatchPct ?? '-'}% match)`;
     }
     if (adultSwatchBox) adultSwatchBox.style.backgroundColor = result.adulterant?.adulteratedColor?.hex || '#ccc';
-    if (adultHexText) adultHexText.textContent = result.adulterant?.adulteratedColor?.hex || '#ccc';
+    if (adultHexText) {
+      adultHexText.textContent = result.adulterant?.adulteratedColor?.hex || '#ccc';
+      adultHexText.dataset.copy = result.adulterant?.adulteratedColor?.hex || '';
+    }
     if (adultDistMetric) {
       adultDistMetric.textContent = `ΔE: ${result.distanceToAdulterated ?? '-'} (${result.adultMatchPct ?? '-'}% match)`;
     }
@@ -164,6 +175,58 @@ const ResultViewer = {
         });
       }
     }
+
+    this.fillPrintSheet(result, isPositive, analyst);
+  },
+
+  fillPrintSheet(result, isPositive, analyst) {
+    const sheet = document.getElementById('printSheet');
+    if (!sheet) return;
+
+    const set = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value || '—';
+    };
+    const paint = (id, color) => {
+      const el = document.getElementById(id);
+      if (el) el.style.background = color || '#ddd';
+    };
+
+    const dateVal = result.createdAt ? new Date(result.createdAt) : new Date();
+    set('psSerial', result.reportId || `MW-${Date.now().toString().slice(-6)}`);
+    set('psIssued', dateVal.toLocaleString(undefined, {
+      year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    }));
+    set('psSample', result.sampleName);
+    set('psSource', result.milkSource);
+    set('psAnalyte', result.adulterant?.name);
+    set('psConfidence', result.confidenceScore != null ? `${result.confidenceScore}% match` : '—');
+
+    const wrap = document.getElementById('psVerdictWrap');
+    const stamp = document.getElementById('psStamp');
+    if (isPositive) {
+      if (wrap) wrap.className = 'ps-verdict is-positive';
+      set('psVerdict', 'POSITIVE');
+      set('psVerdictMean', `Adulterant indicated for ${result.adulterant?.name || 'this test'}. Treat as unsafe.`);
+      if (stamp) stamp.textContent = 'FAIL';
+    } else {
+      if (wrap) wrap.className = 'ps-verdict is-negative';
+      set('psVerdict', 'NEGATIVE');
+      set('psVerdictMean', `No adulterant indicated. Pad matches the normal standard for ${result.adulterant?.name || 'this test'}.`);
+      if (stamp) stamp.textContent = 'PASS';
+    }
+
+    paint('psChipSampled', result.sampledColor?.hex);
+    paint('psChipPure', result.adulterant?.pureColor?.hex);
+    paint('psChipAdult', result.adulterant?.adulteratedColor?.hex);
+    set('psHexSampled', result.sampledColor?.hex);
+    set('psHexPure', result.adulterant?.pureColor?.hex);
+    set('psHexAdult', result.adulterant?.adulteratedColor?.hex);
+    set('psDePure', `ΔE ${result.distanceToPure ?? '—'} · ${result.pureMatchPct ?? '—'}%`);
+    set('psDeAdult', `ΔE ${result.distanceToAdulterated ?? '—'} · ${result.adultMatchPct ?? '—'}%`);
+    const finding = result.chemicalReport?.chemicalMechanism || result.chemicalReport?.purpose || '';
+    set('psFinding', finding.length > 220 ? `${finding.slice(0, 217).trim()}…` : finding);
+    set('psFssai', result.chemicalReport?.fssaiLimit ? `FSSAI: ${result.chemicalReport.fssaiLimit}` : '');
   }
 };
 

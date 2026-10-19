@@ -1,7 +1,7 @@
 <%- include('partials/head') %>
 <%- include('partials/navbar') %>
 
-<main class="page-shell guide-page">
+<main class="page-shell guide-page" id="main">
   <div class="container">
     <header class="page-intro">
       <p class="hero-tag">Knowledge base</p>
@@ -11,7 +11,7 @@
 
     <div class="guide-list">
       <% (adulterants || []).forEach(function(item, idx) { %>
-      <article class="guide-card">
+      <article class="guide-card paper-hover reveal">
         <div class="guide-card-top">
           <div>
             <span class="guide-kicker">Adulterant <%= idx + 1 %></span>
@@ -33,11 +33,11 @@
             <h3>Strip color change</h3>
             <p>
               <strong>Normal:</strong> <%= item.pureColor.name %>
-              <code><%= item.pureColor.hex %></code>
+              <code class="copyable" data-copy="<%= item.pureColor.hex %>" title="Copy hex"><%= item.pureColor.hex %></code>
             </p>
             <p>
               <strong>Adulterated:</strong> <%= item.adulteratedColor.name %>
-              <code><%= item.adulteratedColor.hex %></code>
+              <code class="copyable" data-copy="<%= item.adulteratedColor.hex %>" title="Copy hex"><%= item.adulteratedColor.hex %></code>
             </p>
           </div>
           <div>

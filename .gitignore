@@ -1,0 +1,76 @@
+# Dependencies
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+.pnp.*
+
+# Environment and secrets — never commit
+.env
+.env.*
+!.env.example
+.envrc
+*.pem
+*.p12
+*.key
+credentials.json
+secrets/
+
+# Local / legacy databases (NeDB, SQLite, leftover files)
+data/
+*.db
+*.sqlite
+*.sqlite3
+app.db
+
+# Mongo dumps / local backups
+dump/
+*.archive
+*.bson
+
+# Uploads generated at runtime (keep the folder)
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Logs and debug
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Cursor local
+.cursor/
+
+# Test / coverage / caches
+coverage/
+.nyc_output/
+.tmp/
+temp/
+tmp/
+
+# Build / deploy artifacts
+dist/
+build/
+.cache/
+.vercel
+.netlify
+.railway
+.render/
+.fly/
+
+# Docker / local overrides
+*.local
+docker-compose.override.yml

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { isMongo, localDB } = require('../config/db');
 
 const adulterantSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
@@ -182,33 +181,16 @@ const INITIAL_ADULTERANTS = [
 class AdulterantModel {
   static async seed() {
     for (const item of INITIAL_ADULTERANTS) {
-      if (isMongo()) {
-        await MongoAdulterant.findOneAndUpdate({ slug: item.slug }, item, { upsert: true, new: true });
-      } else {
-        const existing = await localDB.adulterants.findOne({ slug: item.slug });
-        if (!existing) {
-          await localDB.adulterants.insert(item);
-        } else {
-          await localDB.adulterants.update({ slug: item.slug }, { $set: item });
-        }
-      }
+      await MongoAdulterant.findOneAndUpdate({ slug: item.slug }, item, { upsert: true, returnDocument: 'after' });
     }
   }
 
   static async find(query = {}) {
-    if (isMongo()) {
-      return await MongoAdulterant.find(query);
-    } else {
-      return await localDB.adulterants.find(query);
-    }
+    return MongoAdulterant.find(query);
   }
 
   static async findOne(query) {
-    if (isMongo()) {
-      return await MongoAdulterant.findOne(query);
-    } else {
-      return await localDB.adulterants.findOne(query);
-    }
+    return MongoAdulterant.findOne(query);
   }
 }
 

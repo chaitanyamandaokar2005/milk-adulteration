@@ -26,15 +26,13 @@ const HistoryManager = {
   },
 
   async loadDashboard() {
-    if (!window.Auth || !window.Auth.token) {
+    if (!window.Auth || !window.Auth.isSignedIn()) {
       return;
     }
 
     try {
       const res = await fetch('/api/analyze/dashboard', {
-        headers: {
-          'Authorization': `Bearer ${window.Auth.token}`
-        }
+        credentials: 'same-origin'
       });
 
       if (!res.ok) return;
@@ -59,10 +57,17 @@ const HistoryManager = {
       const adultCountEl = document.getElementById('dashAdultCount');
       const avgConfidenceEl = document.getElementById('dashAvgConfidence');
 
-      if (totalTestsEl) totalTestsEl.textContent = stats.totalTests ?? 0;
-      if (pureCountEl) pureCountEl.textContent = stats.pureCount ?? 0;
-      if (adultCountEl) adultCountEl.textContent = stats.adulteratedCount ?? 0;
-      if (avgConfidenceEl) avgConfidenceEl.textContent = `${stats.avgConfidence ?? 0}%`;
+      if (window.countTo) {
+        if (totalTestsEl) window.countTo(totalTestsEl, stats.totalTests ?? 0);
+        if (pureCountEl) window.countTo(pureCountEl, stats.pureCount ?? 0);
+        if (adultCountEl) window.countTo(adultCountEl, stats.adulteratedCount ?? 0);
+        if (avgConfidenceEl) window.countTo(avgConfidenceEl, stats.avgConfidence ?? 0, { suffix: '%' });
+      } else {
+        if (totalTestsEl) totalTestsEl.textContent = stats.totalTests ?? 0;
+        if (pureCountEl) pureCountEl.textContent = stats.pureCount ?? 0;
+        if (adultCountEl) adultCountEl.textContent = stats.adulteratedCount ?? 0;
+        if (avgConfidenceEl) avgConfidenceEl.textContent = `${stats.avgConfidence ?? 0}%`;
+      }
     } catch (err) {
       console.warn('Error loading dashboard stats:', err);
     }
@@ -72,7 +77,7 @@ const HistoryManager = {
     const tbody = document.getElementById('historyTableBody');
     if (!tbody) return;
 
-    if (!window.Auth || !window.Auth.token) {
+    if (!window.Auth || !window.Auth.isSignedIn()) {
       tbody.innerHTML = `
         <tr>
           <td colspan="8" style="text-align:center; padding:28px; color:var(--text-muted);">
@@ -85,9 +90,7 @@ const HistoryManager = {
 
     try {
       const res = await fetch('/api/analyze/history', {
-        headers: {
-          'Authorization': `Bearer ${window.Auth.token}`
-        }
+        credentials: 'same-origin'
       });
       const data = await res.json();
 
@@ -137,7 +140,7 @@ const HistoryManager = {
             <td><strong>${item.confidenceScore}%</strong></td>
             <td style="font-size:0.8rem; color:#64748b;">${dateStr}</td>
             <td>
-              <button class="btn btn-ghost btn-sm" onclick="HistoryManager.deleteRecord('${item._id}')" title="Delete record" style="color:#ef4444; padding:4px 8px;">
+              <button class="btn btn-ghost btn-sm" onclick="HistoryManager.deleteRecord('${item.id || item._id}')" title="Delete record" style="color:#ef4444; padding:4px 8px;">
                 Delete
               </button>
             </td>
@@ -155,14 +158,9 @@ const HistoryManager = {
     if (!confirm('Are you sure you want to delete this test record?')) return;
 
     try {
-      const headers = {};
-      if (window.Auth && window.Auth.token) {
-        headers['Authorization'] = `Bearer ${window.Auth.token}`;
-      }
-
       const res = await fetch(`/api/analyze/${id}`, {
         method: 'DELETE',
-        headers
+        credentials: 'same-origin'
       });
 
       if (res.ok) {
