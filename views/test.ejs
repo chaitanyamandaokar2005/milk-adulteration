@@ -1,0 +1,111 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="page-shell test-page">
+  <div class="container test-layout">
+    <header class="page-intro">
+      <p class="hero-tag">Strip analyzer</p>
+      <h1>Match pad color to a lab standard</h1>
+      <p>Upload one strip photo, confirm the sampled color, then choose which adulterant you tested. Results open on a separate report page.</p>
+    </header>
+
+    <ol class="progress-steps" aria-label="Test steps">
+      <li class="is-active">Upload</li>
+      <li>Sample color</li>
+      <li>Analyze</li>
+      <li>Result page</li>
+    </ol>
+
+    <div class="card test-card" id="uploadWindow">
+      <div class="card-header">
+        <h2 class="card-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          Test strip photo
+        </h2>
+        <button type="button" class="btn btn-ghost btn-sm" id="resetBtn" style="display:none;">Reset photo</button>
+      </div>
+
+      <div class="auth-gate-overlay" id="authGateOverlay">
+        <div class="auth-gate-content">
+          <div class="auth-gate-lock">🔒</div>
+          <h3>Sign in to run a test</h3>
+          <p>Accounts keep certificates and history on your dashboard. Guests cannot save strip results.</p>
+          <div class="auth-gate-btns">
+            <a class="btn btn-primary" href="/login?next=/test">Login</a>
+            <a class="btn btn-outline" href="/register?next=/test">Create account</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="uploadFormArea" style="display:none;">
+        <div class="upload-dropzone" id="dropzone">
+          <div class="dropzone-icon">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+          </div>
+          <div class="dropzone-text">
+            <h3>Click or drag the strip photo here</h3>
+            <p>PNG, JPG, or WebP · fill the frame with the colored pad if you can</p>
+          </div>
+          <input type="file" id="stripFileInput" class="dropzone-file-input" accept="image/*" />
+        </div>
+
+        <div class="workspace-preview" id="workspacePreview">
+          <div class="canvas-wrapper">
+            <canvas id="stripCanvas"></canvas>
+          </div>
+          <div class="canvas-toolbar">
+            <div class="sampled-preview-box">
+              <span class="color-swatch-circle" id="sampleSwatch"></span>
+              <div>
+                <div class="color-hex-tag" id="sampleHex">#E5E5E5</div>
+                <span class="canvas-tip" id="sampleStatusTip">Click anywhere on the pad</span>
+              </div>
+              <span class="preview-match-pill" id="previewMatchPill" style="display:none;"></span>
+            </div>
+            <div class="canvas-toolbar-actions">
+              <button type="button" class="btn btn-outline btn-sm" id="sampleLeftBtn" title="Sample Left Pad (Normal Control)">Left (Normal)</button>
+              <button type="button" class="btn btn-outline btn-sm" id="sampleRightBtn" title="Sample Right Pad (Adulterated)">Right (Adulterated)</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="autoSampleBtn">Auto</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Which strip did you run?</label>
+          <div class="adulterant-chips" id="adulterantChips">
+            <% (adulterants || []).forEach(function(item, i) { %>
+            <button type="button" class="chip-option <%= i === 0 ? 'active' : '' %>" data-slug="<%= item.slug %>">
+              <span class="chip-color-dot" style="background:<%= item.adulteratedColor.hex %>;"></span>
+              <span><%= item.name.split('/')[0].trim() %></span>
+              <span class="chip-pair">
+                <i style="background:<%= item.pureColor.hex %>;"></i>
+                <i style="background:<%= item.adulteratedColor.hex %>;"></i>
+              </span>
+            </button>
+            <% }) %>
+          </div>
+        </div>
+
+        <div class="test-fields">
+          <div class="form-group">
+            <label class="form-label" for="sampleNameInput">Sample label (optional)</label>
+            <input type="text" id="sampleNameInput" class="form-input" placeholder="e.g. Morning dairy — Batch A" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="milkSourceInput">
+              Milk source / supplier
+              <span class="required-mark">required</span>
+            </label>
+            <input type="text" id="milkSourceInput" class="form-input" placeholder="e.g. local dairy, packet brand, vendor" required />
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-lg analyze-cta" id="analyzeBtn" disabled>
+          Analyze color match
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

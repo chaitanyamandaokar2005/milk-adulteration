@@ -1,0 +1,72 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="page-shell guide-page">
+  <div class="container">
+    <header class="page-intro">
+      <p class="hero-tag">Knowledge base</p>
+      <h1>Milk adulterants &amp; chemical impact</h1>
+      <p>The four contaminants, why they are added, how the strip reacts, and the health risk.</p>
+    </header>
+
+    <div class="guide-list">
+      <% (adulterants || []).forEach(function(item, idx) { %>
+      <article class="guide-card">
+        <div class="guide-card-top">
+          <div>
+            <span class="guide-kicker">Adulterant <%= idx + 1 %></span>
+            <h2><%= item.name %></h2>
+            <% if (item.chemicalFormula) { %>
+            <p class="guide-formula"><%= item.chemicalFormula %></p>
+            <% } %>
+          </div>
+          <div class="mini-split">
+            <div class="mini-swatch" title="Normal / left pad" style="background:<%= item.pureColor.hex %>;"></div>
+            <div class="mini-swatch" title="Adulterated / right pad" style="background:<%= item.adulteratedColor.hex %>;"></div>
+          </div>
+        </div>
+
+        <p class="guide-lead"><%= item.purpose %></p>
+
+        <div class="guide-meta-grid">
+          <div>
+            <h3>Strip color change</h3>
+            <p>
+              <strong>Normal:</strong> <%= item.pureColor.name %>
+              <code><%= item.pureColor.hex %></code>
+            </p>
+            <p>
+              <strong>Adulterated:</strong> <%= item.adulteratedColor.name %>
+              <code><%= item.adulteratedColor.hex %></code>
+            </p>
+          </div>
+          <div>
+            <h3>SNF &amp; density</h3>
+            <p><%= item.snfImpact %></p>
+            <p><%= item.densityImpact %></p>
+          </div>
+          <div>
+            <h3>Reaction mechanism</h3>
+            <p><%= item.chemicalMechanism %></p>
+          </div>
+          <div>
+            <h3>FSSAI limit</h3>
+            <p><%= item.fssaiLimit %></p>
+          </div>
+        </div>
+
+        <div class="guide-hazards">
+          <h3>Health hazards</h3>
+          <ul>
+            <% (item.healthHazards || []).forEach(function(h) { %>
+            <li><%= h %></li>
+            <% }) %>
+          </ul>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

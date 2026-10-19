@@ -1,0 +1,37 @@
+  <header class="navbar<%= (layout === 'auth') ? ' navbar-auth' : '' %>">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo">
+        <div class="brand-icon">🥛</div>
+        <div class="brand-text">
+          <h1>PureMilk AI</h1>
+          <span>Strip color analyzer</span>
+        </div>
+      </a>
+
+      <% if (layout !== 'auth') { %>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu">☰</button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/" class="<%= page === 'home' ? 'active' : '' %>">Home</a></li>
+        <li><a href="/test" class="<%= page === 'test' ? 'active' : '' %>">Test</a></li>
+        <li><a href="/calibration" class="<%= page === 'calibration' ? 'active' : '' %>">Colors</a></li>
+        <li><a href="/adulterants" class="<%= page === 'adulterants' ? 'active' : '' %>">Guide</a></li>
+        <li><a href="/dashboard" class="<%= page === 'dashboard' ? 'active' : '' %>">History</a></li>
+      </ul>
+      <% } %>
+
+      <div class="nav-actions">
+        <% if (layout !== 'auth') { %>
+        <div class="db-pill" id="dbStatusPill" title="Database status">
+          <span class="db-dot" id="dbDot"></span>
+          <span id="dbModeText">Connecting...</span>
+        </div>
+        <% } %>
+
+        <div id="authContainer">
+          <a class="btn btn-outline btn-sm" href="/login">Login</a>
+          <a class="btn btn-primary btn-sm" href="/register">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </header>

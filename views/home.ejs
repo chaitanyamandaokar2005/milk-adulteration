@@ -1,0 +1,104 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="home-main">
+  <section class="home-hero">
+    <div class="container home-hero-grid">
+      <div>
+        <p class="hero-tag">Color-match strip screening</p>
+        <h1 class="home-title">Upload a test strip.<br>Get <span>positive or negative</span> in seconds.</h1>
+        <p class="home-lead">
+          Photograph the chemical pad, pick the adulterant you tested, and we compare the sampled color
+          with calibrated pure vs adulterated hex codes for formalin, urea, starch, and detergent.
+        </p>
+        <div class="home-cta">
+          <a class="btn btn-primary btn-lg" href="/test">Start a strip test</a>
+          <a class="btn btn-outline btn-lg" href="/calibration">View color standards</a>
+        </div>
+        <ul class="home-points">
+          <li>Eyedropper samples the reaction pad</li>
+          <li>Closest hex match decides the result</li>
+          <li>NEGATIVE = pure · POSITIVE = adulterated</li>
+        </ul>
+      </div>
+
+      <aside class="home-preview-card">
+        <div class="home-preview-label">How a result looks</div>
+        <div class="status-banner pure home-demo-banner">
+          <div class="status-badge-text">
+            <span style="font-size:28px;">✓</span>
+            <div>
+              <h3>NEGATIVE — PURE MILK</h3>
+              <p>Pad color matches the normal standard</p>
+            </div>
+          </div>
+          <span class="result-terminology-badge negative-badge">NEGATIVE</span>
+        </div>
+        <div class="color-triad home-demo-triad">
+          <div class="triad-box">
+            <div class="triad-swatch" style="background:#5A051E;"></div>
+            <div class="triad-label">Your pad</div>
+          </div>
+          <div class="triad-box">
+            <div class="triad-swatch" style="background:#5A051E;"></div>
+            <div class="triad-label">Normal</div>
+          </div>
+          <div class="triad-box">
+            <div class="triad-swatch" style="background:#3E1A58;"></div>
+            <div class="triad-label">Adulterated</div>
+          </div>
+        </div>
+        <p class="home-preview-note">Closer ΔE to the left swatch → NEGATIVE. Closer to the right swatch → POSITIVE.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="home-steps">
+    <div class="container">
+      <h2 class="section-kicker">Three steps</h2>
+      <div class="steps-grid">
+        <article class="step-card">
+          <span class="step-num">1</span>
+          <h3>Upload the strip</h3>
+          <p>Drop a PNG, JPG, or WebP photo of the finished chemical test strip.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-num">2</span>
+          <h3>Sample the pad color</h3>
+          <p>Auto-sample the reaction zone, or click the pad if the photo is cropped oddly.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-num">3</span>
+          <h3>Read POSITIVE / NEGATIVE</h3>
+          <p>The result page shows the match against the left (pure) and right (adulterated) standards.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-tests">
+    <div class="container">
+      <div class="section-head-row">
+        <div>
+          <h2 class="section-kicker">Supported strip tests</h2>
+          <p>Each test uses two calibrated pad colors — normal milk on the left, adulterated on the right.</p>
+        </div>
+        <a class="btn btn-outline" href="/adulterants">Open full guide</a>
+      </div>
+      <div class="home-test-grid">
+        <% (adulterants || []).forEach(function(item) { %>
+        <a class="home-test-card" href="/test">
+          <div class="home-test-swatches">
+            <span style="background:<%= item.pureColor.hex %>;" title="Normal"></span>
+            <span style="background:<%= item.adulteratedColor.hex %>;" title="Adulterated"></span>
+          </div>
+          <h3><%= item.name.split('/')[0].trim() %></h3>
+          <p><%= item.purpose %></p>
+        </a>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

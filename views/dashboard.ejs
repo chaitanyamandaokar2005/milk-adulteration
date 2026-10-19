@@ -1,0 +1,90 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="page-shell dashboard-page">
+  <div class="container">
+    <header class="page-intro">
+      <p class="hero-tag">Personal records</p>
+      <h1>Dashboard</h1>
+      <p>Saved strip tests, POSITIVE / NEGATIVE counts, and milk-source certificates.</p>
+    </header>
+
+    <div id="dashboardLoggedIn" style="display:none;">
+      <div class="profile-dashboard-card">
+        <div class="profile-header-row">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="dashAvatar">U</div>
+            <div>
+              <h2 class="profile-name" id="dashFullName">User</h2>
+              <span class="profile-email" id="dashEmail">user@example.com</span>
+            </div>
+          </div>
+          <button class="btn btn-outline btn-sm" id="refreshDashboardBtn" type="button">Refresh</button>
+        </div>
+
+        <div class="dash-stats-grid">
+          <div class="dash-stat-card">
+            <div class="dash-stat-value" id="dashTotalTests">0</div>
+            <div class="dash-stat-label">Total tests</div>
+          </div>
+          <div class="dash-stat-card safe">
+            <div class="dash-stat-value" id="dashPureCount">0</div>
+            <div class="dash-stat-label">NEGATIVE (pure)</div>
+          </div>
+          <div class="dash-stat-card danger">
+            <div class="dash-stat-value" id="dashAdultCount">0</div>
+            <div class="dash-stat-label">POSITIVE (adulterated)</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-value" id="dashAvgConfidence">0%</div>
+            <div class="dash-stat-label">Avg confidence</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="card-header">
+          <h2 class="card-title">Test history</h2>
+          <button class="btn btn-outline btn-sm" id="refreshHistoryBtn" type="button">Refresh</button>
+        </div>
+
+        <div class="history-table-wrapper">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Sampled color</th>
+                <th>Sample label</th>
+                <th>Milk source</th>
+                <th>Adulterant tested</th>
+                <th>Result</th>
+                <th>Confidence</th>
+                <th>Date &amp; time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr>
+                <td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);">
+                  Loading saved test records...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashboardLoggedOut">
+      <div class="card empty-auth-card">
+        <h2>Login to view this dashboard</h2>
+        <p>History lives on this page only — it is not mixed into the strip tester.</p>
+        <div class="auth-gate-btns">
+          <a class="btn btn-primary" href="/login?next=/dashboard">Login</a>
+          <a class="btn btn-outline" href="/register?next=/dashboard">Sign up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

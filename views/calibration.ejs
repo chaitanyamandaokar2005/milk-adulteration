@@ -1,0 +1,61 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="page-shell calib-page">
+  <div class="container">
+    <header class="page-intro">
+      <p class="hero-tag">Laboratory color standards</p>
+      <h1>Calibration color codes</h1>
+      <p>
+        Each test uses a two-pad strip: <strong>left = normal (pure milk)</strong>,
+        <strong>right = adulterated</strong>. Matching uses these hex values, not photographs.
+      </p>
+    </header>
+
+    <div class="legend-row">
+      <div class="legend-chip legend-pure">Left pad — Normal / pure milk</div>
+      <div class="legend-chip legend-adult">Right pad — Adulterated</div>
+    </div>
+
+    <div class="calib-grid">
+      <% (adulterants || []).forEach(function(item, idx) { %>
+      <article class="calib-card">
+        <header class="calib-card-head">
+          <span class="calib-index"><%= idx + 1 %></span>
+          <div>
+            <h2><%= item.name %></h2>
+            <p><%= item.purpose %></p>
+          </div>
+        </header>
+
+        <div class="color-split" aria-label="Normal vs adulterated color standards">
+          <div class="color-pane">
+            <div class="color-pane-label">Normal</div>
+            <div class="color-pane-swatch" style="background: <%= item.pureColor.hex %>;"></div>
+            <div class="color-pane-meta">
+              <span class="color-name"><%= item.pureColor.name %></span>
+              <code class="hex-code"><%= item.pureColor.hex %></code>
+              <span class="rgb-code">RGB <%= (item.pureColor.rgb || []).join(', ') %></span>
+            </div>
+          </div>
+          <div class="color-pane color-pane-adult">
+            <div class="color-pane-label">Adulterated</div>
+            <div class="color-pane-swatch" style="background: <%= item.adulteratedColor.hex %>;"></div>
+            <div class="color-pane-meta">
+              <span class="color-name"><%= item.adulteratedColor.name %></span>
+              <code class="hex-code"><%= item.adulteratedColor.hex %></code>
+              <span class="rgb-code">RGB <%= (item.adulteratedColor.rgb || []).join(', ') %></span>
+            </div>
+          </div>
+        </div>
+
+        <% if (item.chemicalFormula) { %>
+        <p class="calib-formula"><span>Formula</span> <%= item.chemicalFormula %></p>
+        <% } %>
+      </article>
+      <% }) %>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

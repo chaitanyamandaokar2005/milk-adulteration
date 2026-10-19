@@ -1,0 +1,218 @@
+const mongoose = require('mongoose');
+const { isMongo, localDB } = require('../config/db');
+
+const adulterantSchema = new mongoose.Schema({
+  slug: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  chemicalFormula: { type: String, default: '' },
+  purpose: { type: String, required: true },
+  snfImpact: { type: String, required: true },
+  densityImpact: { type: String, required: true },
+  chemicalMechanism: { type: String, required: true },
+  healthHazards: [String],
+  fssaiLimit: { type: String, required: true },
+  referenceImage: { type: String, required: true },
+  pureStripImage: { type: String, required: true },
+  adulteratedStripImage: { type: String, required: true },
+  pureColor: {
+    hex: String,
+    rgb: [Number],
+    name: String,
+    description: String
+  },
+  adulteratedColor: {
+    hex: String,
+    rgb: [Number],
+    name: String,
+    description: String
+  },
+  detectionTips: [String]
+});
+
+const MongoAdulterant = mongoose.model('Adulterant', adulterantSchema);
+
+const INITIAL_ADULTERANTS = [
+  {
+    slug: 'formalin',
+    name: 'Formalin (Formaldehyde)',
+    chemicalFormula: 'HCHO / CH₂O',
+    purpose: 'Illegally used as a preservative to prevent bacterial spoilage and extend shelf life of adulterated or stale milk for days without refrigeration.',
+    snfImpact: 'Does not directly affect SNF readings; masks microbial activity that would otherwise cause souring and curdling detectable by standard tests.',
+    densityImpact: 'Minimal effect on density; makes stale milk appear fresh by inhibiting fermentation-driven density changes.',
+    chemicalMechanism: 'Schiff reagent (fuchsin-sulfurous acid) or KMnO₄ decolorization reaction: formaldehyde oxidizes the reagent producing a vivid magenta-crimson to deep violet chromophore complex. In the absence of formalin, strips remain off-white or pale.',
+    healthHazards: [
+      'Classified as a Group 1 human carcinogen (IARC) — directly linked to nasopharyngeal and leukemia cancers',
+      'Acute oral toxicity: corrosive necrosis of esophagus, stomach mucosa, and intestinal lining',
+      'Severe hepatotoxicity and irreversible liver cirrhosis with chronic exposure',
+      'Respiratory damage, chronic bronchitis, and mucosal inflammation',
+      'Systemic neurotoxicity with memory impairment, motor dysfunction, and CNS depression'
+    ],
+    fssaiLimit: 'Absolute zero tolerance (0.0 ppm). Formalin is strictly banned under FSSAI Food Safety & Standards (Contaminants, Toxins and Residues) Regulations.',
+    referenceImage: '/references/formalin_reference.png',
+    pureStripImage: '/references/formalin_pure.png',
+    adulteratedStripImage: '/references/formalin_adulterated.png',
+    pureColor: {
+      hex: '#5A051E',
+      rgb: [90, 5, 30],
+      name: 'Crimson-Magenta',
+      description: 'Formalin-free (pure milk) left/top pad on Schiff/KMnO₄ strip.'
+    },
+    adulteratedColor: {
+      hex: '#3E1A58',
+      rgb: [62, 26, 88],
+      name: 'Deep Violet-Purple',
+      description: 'Formaldehyde reacts with Schiff reagent producing a deep violet-purple shift on the right/bottom pad.'
+    },
+    detectionTips: [
+      'Left/top pad is the normal reference (crimson); right/bottom pad is adulterated (violet).',
+      'Even trace formalin causes a noticeable shift towards violet-purple.',
+      'Strip reaction is rapid — results visible within 20 to 40 seconds at room temperature.'
+    ]
+  },
+  {
+    slug: 'urea',
+    name: 'Urea / Ammonium Sulphate',
+    chemicalFormula: 'CH₄N₂O / (NH₄)₂SO₄',
+    purpose: 'Added illegally to artificially boost non-protein nitrogen, falsifying SNF (Solids-Not-Fat) and protein readings.',
+    snfImpact: 'Artificially elevates calculated SNF readings by up to 2.5% to deceive standard refractometer and lactometer checks.',
+    densityImpact: 'Slightly increases specific gravity to conceal heavy water dilution.',
+    chemicalMechanism: 'p-Dimethylaminobenzaldehyde (DMAB) condensation reaction in acidic media forming a distinctive lemon-yellow chromogen.',
+    healthHazards: [
+      'Severe nephrotoxicity and progressive chronic kidney failure',
+      'Gastric ulceration and irritation of intestinal mucosa',
+      'Metabolic acidosis and cellular dehydration',
+      'Forms carcinogenic nitrosamines when combined with nitrate contaminants'
+    ],
+    fssaiLimit: 'Max permissible natural urea in milk: 700 ppm (70 mg/100ml). Any synthetic addition is strictly illegal.',
+    referenceImage: '/references/urea_reference.png',
+    pureStripImage: '/references/urea_pure.png',
+    adulteratedStripImage: '/references/urea_adulterated.png',
+    pureColor: {
+      hex: '#B6B3A4',
+      rgb: [182, 179, 164],
+      name: 'Pale Control Pad (Off-White)',
+      description: 'Left pad: normal pure milk control pad from calibrated reference.'
+    },
+    adulteratedColor: {
+      hex: '#B0B63B',
+      rgb: [176, 182, 59],
+      name: 'Vibrant Lemon-Yellow',
+      description: 'Right pad: turns vivid lemon-yellow in presence of synthetic urea/ammonium.'
+    },
+    detectionTips: [
+      'Left pad = normal/pure off-white; Right pad = adulterated lemon-yellow.',
+      'Yellow saturation directly correlates with synthetic urea concentration.',
+      'Allow strip reaction time of 60 seconds at room temperature.'
+    ]
+  },
+  {
+    slug: 'starch',
+    name: 'Starch / Maltodextrin',
+    chemicalFormula: '(C₆H₁₀O₅)ₙ',
+    purpose: 'Used to thicken diluted milk, restoring viscosity, creaminess, and lactometer density after water dilution.',
+    snfImpact: 'Falsely restores total solid readings by adding complex carbohydrates instead of natural milk fat and proteins.',
+    densityImpact: 'Increases specific gravity from watered readings (<1.026) back into the normal range (1.028–1.032 g/cm³).',
+    chemicalMechanism: 'Iodine-starch inclusion reaction: Triiodide (I₃⁻) ions insert into the amylose helix, creating an intense dark blue-black charge transfer complex.',
+    healthHazards: [
+      'Rapid blood glucose spikes, dangerous for diabetic individuals',
+      'Severe indigestion, diarrhea, and colic in infants',
+      'Prevents absorption of natural calcium and casein proteins in the gastrointestinal tract',
+      'Promotes rapid microbial fermentation and souring'
+    ],
+    fssaiLimit: 'Nil tolerance (0.0%). Any presence of external starch or maltodextrin indicates adulteration.',
+    referenceImage: '/references/starch_reference.jpg',
+    pureStripImage: '/references/starch_pure.png',
+    adulteratedStripImage: '/references/starch_adulterated.png',
+    pureColor: {
+      hex: '#594214',
+      rgb: [89, 66, 20],
+      name: 'Amber Mustard Brown',
+      description: 'Left pad: normal pure milk reaction pad from calibrated reference.'
+    },
+    adulteratedColor: {
+      hex: '#120F0B',
+      rgb: [18, 15, 11],
+      name: 'Deep Blue-Black / Pitch Charcoal',
+      description: 'Right pad: turns intensely dark blue-black / charcoal complex with amylose.'
+    },
+    detectionTips: [
+      'Left pad = normal/amber-brown; Right pad = adulterated deep charcoal/black.',
+      'Boiling milk beforehand can increase starch gelatinization sensitivity.',
+      'Even trace quantities of maltodextrin trigger noticeable darkening.'
+    ]
+  },
+  {
+    slug: 'detergent',
+    name: 'Detergent / Commercial Soap',
+    chemicalFormula: 'C₁₂H₂₅SO₄Na (Anionic Surfactants)',
+    purpose: 'Added to create artificial dense froth, emulsify cheap vegetable oils with water, and produce synthetic milk.',
+    snfImpact: 'Distorts standard colloidal balance and alters fat globule dispersion properties.',
+    densityImpact: 'Maintains uniform suspension of adulterated fats without spontaneous phase separation.',
+    chemicalMechanism: 'Anionic surfactant displacement reaction with cationic dye (e.g., bromocresol purple or pinacyanol) resulting in a dark slate-blue precipitation.',
+    healthHazards: [
+      'Corrosive injury to esophagus, stomach lining, and intestines',
+      'Acute alkaline gastroenteritis and persistent vomiting',
+      'Alkaline poisoning causing disruption of systemic enzyme pathways',
+      'Chronic toxic stress on liver filtration systems'
+    ],
+    fssaiLimit: 'Zero tolerance (0.0%). Absolutely prohibited in food products.',
+    referenceImage: '/references/detergent_reference.png',
+    pureStripImage: '/references/detergent_pure.png',
+    adulteratedStripImage: '/references/detergent_adulterated.png',
+    pureColor: {
+      hex: '#856E72',
+      rgb: [133, 110, 114],
+      name: 'Mauve / Soft Lavender Pink',
+      description: 'Left pad: normal pure milk control pad from calibrated reference.'
+    },
+    adulteratedColor: {
+      hex: '#3A3B39',
+      rgb: [58, 59, 57],
+      name: 'Dark Slate Charcoal',
+      description: 'Right pad: shifts to dark slate-blue / charcoal with surfactant.'
+    },
+    detectionTips: [
+      'Left pad = normal mauve/pink-lavender; Right pad = adulterated dark slate charcoal.',
+      'Lathering test: vigorous shaking produces persistent dense foam that stays for >10 mins.',
+      'Strip detection responds quickly within 30 to 45 seconds.'
+    ]
+  }
+];
+
+class AdulterantModel {
+  static async seed() {
+    for (const item of INITIAL_ADULTERANTS) {
+      if (isMongo()) {
+        await MongoAdulterant.findOneAndUpdate({ slug: item.slug }, item, { upsert: true, new: true });
+      } else {
+        const existing = await localDB.adulterants.findOne({ slug: item.slug });
+        if (!existing) {
+          await localDB.adulterants.insert(item);
+        } else {
+          await localDB.adulterants.update({ slug: item.slug }, { $set: item });
+        }
+      }
+    }
+  }
+
+  static async find(query = {}) {
+    if (isMongo()) {
+      return await MongoAdulterant.find(query);
+    } else {
+      return await localDB.adulterants.find(query);
+    }
+  }
+
+  static async findOne(query) {
+    if (isMongo()) {
+      return await MongoAdulterant.findOne(query);
+    } else {
+      return await localDB.adulterants.findOne(query);
+    }
+  }
+}
+
+module.exports = {
+  AdulterantModel,
+  INITIAL_ADULTERANTS
+};

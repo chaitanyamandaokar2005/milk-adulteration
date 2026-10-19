@@ -1,0 +1,127 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="page-shell result-page">
+  <div class="container result-layout">
+    <div class="result-empty" id="resultPlaceholder">
+      <div class="card empty-auth-card">
+        <h1>No result on this page yet</h1>
+        <p>Run a strip test first. After analysis you are sent here with the positive / negative report.</p>
+        <a class="btn btn-primary" href="/test">Go to Test Strip</a>
+      </div>
+    </div>
+
+    <div id="resultContent" style="display:none;">
+      <div class="result-toolbar">
+        <a class="btn btn-outline btn-sm" href="/test">New strip test</a>
+        <div class="result-toolbar-actions">
+          <a class="btn btn-ghost btn-sm" href="/dashboard">Dashboard</a>
+          <button class="btn btn-primary btn-sm" id="printReportBtn" type="button">Print certificate</button>
+        </div>
+      </div>
+
+      <article class="card certificate-card" id="resultWindow">
+        <div class="lab-report-header" id="labReportHeader">
+          <div class="lab-report-title-row">
+            <div>
+              <div class="lab-report-label">PureMilk AI Diagnostic Laboratory</div>
+              <div class="lab-report-subtitle">Chemical adulteration analysis certificate</div>
+            </div>
+            <div class="lab-report-meta">
+              <div class="lab-report-id" id="labReportId">Report #—</div>
+              <div class="lab-report-date" id="labReportDate">—</div>
+              <div class="lab-report-source" id="labReportSource" style="display:none;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-banner pure" id="statusBanner">
+          <div class="status-badge-text">
+            <span id="statusIcon" style="font-size:28px;">✓</span>
+            <div>
+              <h3 id="statusHeading">NEGATIVE — PURE MILK</h3>
+              <p id="statusSubtitle">No hazardous adulterant detected</p>
+            </div>
+          </div>
+          <div class="status-right">
+            <span class="confidence-pill" id="confidencePill">—</span>
+            <span class="result-terminology-badge negative-badge" id="terminologyBadge">NEGATIVE</span>
+          </div>
+        </div>
+
+        <div class="terminology-bar" id="terminologyBar">
+          <strong id="termBarLabel">NEGATIVE</strong>: <span id="termBarDesc">No adulterant detected — milk is pure and safe for consumption</span>
+        </div>
+
+        <div class="color-match-card">
+          <div class="color-triad">
+            <div class="triad-box">
+              <div class="triad-swatch" id="sampledSwatchBox"></div>
+              <div class="triad-label">Your strip pad</div>
+              <div class="triad-hex" id="sampledHexText">#000000</div>
+              <div class="triad-metric" id="sampledMetricText">Sampled color</div>
+            </div>
+            <div class="triad-box">
+              <div class="triad-swatch" id="pureSwatchBox"></div>
+              <div class="triad-label">Normal (left standard)</div>
+              <div class="triad-hex" id="pureHexText">#000000</div>
+              <div class="triad-metric" id="pureDistMetric">ΔE: 0</div>
+            </div>
+            <div class="triad-box">
+              <div class="triad-swatch" id="adultSwatchBox"></div>
+              <div class="triad-label">Adulterated (right standard)</div>
+              <div class="triad-hex" id="adultHexText">#000000</div>
+              <div class="triad-metric" id="adultDistMetric">ΔE: 0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="all4-comparison-box">
+          <h4>Match against all four color standards</h4>
+          <p>Compared to the calibrated hex values for each test (normal on the left, adulterated on the right).</p>
+          <div class="all4-grid" id="all4RefGrid"></div>
+        </div>
+
+        <div class="report-grid">
+          <div class="report-item">
+            <div class="report-item-title">Why it is added</div>
+            <div class="report-item-body" id="reportPurpose">-</div>
+          </div>
+          <div class="report-item">
+            <div class="report-item-title">SNF &amp; density impact</div>
+            <div class="report-item-body">
+              <strong id="reportSnf">-</strong><br />
+              <span id="reportDensity" style="font-size:0.8rem; color:var(--text-muted);">-</span>
+            </div>
+          </div>
+          <div class="report-item">
+            <div class="report-item-title">Chemical reaction</div>
+            <div class="report-item-body" id="reportMechanism">-</div>
+          </div>
+          <div class="report-item">
+            <div class="report-item-title" style="color:var(--danger-red);">Health hazards</div>
+            <ul class="hazard-list" id="reportHazards"></ul>
+          </div>
+        </div>
+
+        <div class="fssai-box">
+          <strong>Regulatory standard (FSSAI):</strong> <span id="reportFssai">-</span>
+        </div>
+
+        <div class="lab-report-footer">
+          <div class="lab-signoff-note">
+            <span><strong>Result guide:</strong></span>
+            <span class="term-mini negative-term">NEGATIVE</span> = Pure &amp; safe &nbsp;|&nbsp;
+            <span class="term-mini positive-term">POSITIVE</span> = Adulterated
+          </div>
+          <div class="lab-doctor-signoff">
+            <div class="signoff-name">PureMilk AI Engine</div>
+            <div class="signoff-role">Colorimetric Analyzer v2.0</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
