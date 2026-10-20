@@ -133,43 +133,10 @@ function initPasswordToggles() {
 function initHomeDemo() {
   const card = document.getElementById('homeDemo');
   if (!card) return;
-  let positive = false;
-  const apply = () => {
-    card.classList.toggle('is-positive', positive);
-    const icon = document.getElementById('homeDemoIcon');
-    const heading = document.getElementById('homeDemoHeading');
-    const sub = document.getElementById('homeDemoSub');
-    const badge = document.getElementById('homeDemoBadge');
-    const pad = document.getElementById('homePadSwatch');
-    const note = document.getElementById('homeDemoNote');
-    const hint = document.getElementById('homeDemoHint');
-    if (positive) {
-      if (icon) icon.textContent = '🚫';
-      if (heading) heading.textContent = 'POSITIVE — ADULTERATED MILK';
-      if (sub) sub.textContent = 'Pad color matches the adulterated standard';
-      if (badge) {
-        badge.textContent = 'POSITIVE';
-        badge.className = 'result-terminology-badge positive-badge';
-      }
-      if (pad) pad.style.background = '#3E1A58';
-      if (note) note.textContent = 'Closer ΔE to the right swatch → POSITIVE. Click again to return to NEGATIVE.';
-      if (hint) hint.textContent = 'click to flip';
-    } else {
-      if (icon) icon.textContent = '✓';
-      if (heading) heading.textContent = 'NEGATIVE — PURE MILK';
-      if (sub) sub.textContent = 'Pad color matches the normal standard';
-      if (badge) {
-        badge.textContent = 'NEGATIVE';
-        badge.className = 'result-terminology-badge negative-badge';
-      }
-      if (pad) pad.style.background = '#5A051E';
-      if (note) note.textContent = 'Closer ΔE to the left swatch → NEGATIVE. Click the card to see a POSITIVE match.';
-      if (hint) hint.textContent = 'click to flip';
-    }
-  };
   const toggle = () => {
-    positive = !positive;
-    apply();
+    card.classList.toggle('is-flipped');
+    const flipped = card.classList.contains('is-flipped');
+    card.setAttribute('aria-label', flipped ? 'Flip back to NEGATIVE sample' : 'Flip to POSITIVE sample');
   };
   card.addEventListener('click', toggle);
   card.addEventListener('keydown', (e) => {
@@ -242,7 +209,7 @@ function initNavIsland() {
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  if (!list || window.matchMedia('(max-width: 768px)').matches) return;
+  if (!list || window.matchMedia('(max-width: 900px)').matches) return;
 
   const indicator = document.createElement('span');
   indicator.className = 'nav-indicator';

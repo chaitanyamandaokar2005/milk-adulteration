@@ -1,5 +1,5 @@
   <header class="navbar<%= (layout === 'auth') ? ' navbar-auth' : '' %>">
-    <div class="container">
+    <div class="nav-shell">
     <div class="nav-container">
       <a href="/" class="brand-logo">
         <span class="brand-mark" aria-hidden="true">
@@ -21,10 +21,6 @@
       </a>
 
       <% if (layout !== 'auth') { %>
-      <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-
       <ul class="nav-links" id="navLinks">
         <li><a href="/" class="<%= page === 'home' ? 'active' : '' %>">Home</a></li>
         <li><a href="/test" class="<%= page === 'test' ? 'active' : '' %>">Test</a></li>
@@ -34,10 +30,17 @@
       </ul>
       <% } %>
 
-      <div class="nav-actions">
-        <div id="authContainer">
-          <a class="btn btn-outline btn-sm" href="/login">Login</a>
-          <a class="btn btn-primary btn-sm" href="/register">Sign Up</a>
+      <div class="nav-end">
+        <% if (layout !== 'auth') { %>
+        <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <% } %>
+        <div class="nav-actions">
+          <div id="authContainer">
+            <a class="btn btn-outline btn-sm" href="/login">Login</a>
+            <a class="btn btn-primary btn-sm" href="/register">Sign Up</a>
+          </div>
         </div>
       </div>
     </div>

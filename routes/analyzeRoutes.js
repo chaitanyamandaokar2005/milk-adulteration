@@ -35,17 +35,10 @@ const upload = multer({
 });
 
 async function attachPublicUrl(req, res, next) {
-  try {
-    if (req.file) {
-      req.file.publicUrl = await persistStripImage(req.file);
-    }
-    next();
-  } catch (err) {
-    console.error('Image store error:', err && err.message ? err.message : err);
-    return res.status(500).json({
-      error: 'Could not save the strip photo. Use a JPG or PNG under 10MB and try again.'
-    });
+  if (req.file) {
+    req.file.publicUrl = await persistStripImage(req.file);
   }
+  next();
 }
 
 function handleUpload(req, res, next) {

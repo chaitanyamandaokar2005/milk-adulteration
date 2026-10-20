@@ -5,7 +5,7 @@ const testResultSchema = new mongoose.Schema({
   userEmail: { type: String, default: 'guest@example.com' },
   adulterantSlug: { type: String, required: true },
   adulterantName: { type: String, required: true },
-  imageUrl: { type: String, required: true },
+  imageUrl: { type: String, default: '' },
   sampledColorHex: { type: String, required: true },
   sampledColorRgb: [Number],
   detectedStatus: { type: String, enum: ['PURE', 'ADULTERATED'], required: true },

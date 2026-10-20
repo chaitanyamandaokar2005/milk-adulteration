@@ -1,13 +1,13 @@
 # MilkWise
 
-Live app: **[https://milkwise.onrender.com](https://milkwise.onrender.com)**  
-Health: [https://milkwise.onrender.com/api/health](https://milkwise.onrender.com/api/health)
+**[Live app](https://milkwise.onrender.com)**  
+**[Health](https://milkwise.onrender.com/api/health)**
 
 Photograph a chemical milk test strip pad, sample the color, and get a **NEGATIVE** (closer to the normal pad) or **POSITIVE** (closer to the adulterated pad) screening result for formalin, urea, starch, or detergent.
 
 This is a color-match aid, not an accredited laboratory or official FSSAI certificate.
 
-Hosted on **Render**, data on **MongoDB Atlas**. Optional **Cloudinary** for strip photos. **No AWS.**
+Hosted on **Render**, data on **MongoDB Atlas**. Strip photos are stored on the server (not Cloudinary/AWS). Color matching does not need a CDN.
 
 ---
 
@@ -52,7 +52,7 @@ On Render, set:
 | `MONGODB_URI` | Atlas SRV string (database `milkwise`) |
 | `JWT_SECRET` | Long random string |
 | `APP_URL` | `https://milkwise.onrender.com` |
-| `CLOUDINARY_*` | Optional, so pad photos survive restarts |
+| `CLOUDINARY_*` | Not used |
 
 Atlas **Network Access** must allow Render (`0.0.0.0/0` for a first deploy). Sessions last **3 days**. New passwords need **8+** characters.
 

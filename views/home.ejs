@@ -23,33 +23,65 @@
         </ul>
       </div>
 
-      <aside class="home-preview-card js-tilt" id="homeDemo" role="button" tabindex="0" aria-label="Toggle sample result">
-        <div class="home-preview-label">How a result looks <span class="home-demo-toggle" id="homeDemoHint">click to flip</span></div>
-        <div class="status-banner pure home-demo-banner">
-          <div class="status-badge-text">
-            <span id="homeDemoIcon" style="font-size:28px;">✓</span>
-            <div>
-              <h3 id="homeDemoHeading">NEGATIVE — PURE MILK</h3>
-              <p id="homeDemoSub">Pad color matches the normal standard</p>
+      <aside class="home-flip" id="homeDemo" role="button" tabindex="0" aria-label="Flip sample result">
+        <div class="home-flip-inner">
+          <div class="home-flip-face home-flip-front home-preview-card">
+            <div class="home-preview-label">How a result looks <span class="home-demo-toggle">click to flip</span></div>
+            <div class="status-banner pure home-demo-banner">
+              <div class="status-badge-text">
+                <span style="font-size:28px;">✓</span>
+                <div>
+                  <h3>NEGATIVE — PURE MILK</h3>
+                  <p>Pad color matches the normal standard</p>
+                </div>
+              </div>
+              <span class="result-terminology-badge negative-badge">NEGATIVE</span>
             </div>
+            <div class="color-triad home-demo-triad">
+              <div class="triad-box">
+                <div class="triad-swatch" style="background:#5A051E;"></div>
+                <div class="triad-label">Your pad</div>
+              </div>
+              <div class="triad-box">
+                <div class="triad-swatch" style="background:#5A051E;"></div>
+                <div class="triad-label">Normal</div>
+              </div>
+              <div class="triad-box">
+                <div class="triad-swatch" style="background:#3E1A58;"></div>
+                <div class="triad-label">Adulterated</div>
+              </div>
+            </div>
+            <p class="home-preview-note">Closer ΔE to the left swatch → NEGATIVE. Flip for POSITIVE.</p>
           </div>
-          <span class="result-terminology-badge negative-badge" id="homeDemoBadge">NEGATIVE</span>
+          <div class="home-flip-face home-flip-back home-preview-card">
+            <div class="home-preview-label">How a result looks <span class="home-demo-toggle">click to flip</span></div>
+            <div class="status-banner adulterated home-demo-banner">
+              <div class="status-badge-text">
+                <span style="font-size:28px;">🚫</span>
+                <div>
+                  <h3>POSITIVE — ADULTERATED MILK</h3>
+                  <p>Pad color matches the adulterated standard</p>
+                </div>
+              </div>
+              <span class="result-terminology-badge positive-badge">POSITIVE</span>
+            </div>
+            <div class="color-triad home-demo-triad">
+              <div class="triad-box">
+                <div class="triad-swatch" style="background:#3E1A58;"></div>
+                <div class="triad-label">Your pad</div>
+              </div>
+              <div class="triad-box">
+                <div class="triad-swatch" style="background:#5A051E;"></div>
+                <div class="triad-label">Normal</div>
+              </div>
+              <div class="triad-box">
+                <div class="triad-swatch" style="background:#3E1A58;"></div>
+                <div class="triad-label">Adulterated</div>
+              </div>
+            </div>
+            <p class="home-preview-note">Closer ΔE to the right swatch → POSITIVE. Flip for NEGATIVE.</p>
+          </div>
         </div>
-        <div class="color-triad home-demo-triad">
-          <div class="triad-box">
-            <div class="triad-swatch" id="homePadSwatch" style="background:#5A051E;"></div>
-            <div class="triad-label">Your pad</div>
-          </div>
-          <div class="triad-box">
-            <div class="triad-swatch" style="background:#5A051E;"></div>
-            <div class="triad-label">Normal</div>
-          </div>
-          <div class="triad-box">
-            <div class="triad-swatch" style="background:#3E1A58;"></div>
-            <div class="triad-label">Adulterated</div>
-          </div>
-        </div>
-        <p class="home-preview-note" id="homeDemoNote">Closer ΔE to the left swatch → NEGATIVE. Click the card to see a POSITIVE match.</p>
       </aside>
     </div>
   </section>

@@ -94,9 +94,6 @@ const startServer = async () => {
     await AdulterantModel.seed();
     console.log('[Seed] Adulterant reference standards loaded into MongoDB.');
 
-    if (isProd && !isCloudinaryEnabled()) {
-      console.warn('[Config] CLOUDINARY_* is not set. Strip photos live on local disk and will vanish on most PaaS restarts.');
-    }
     if (isProd && process.env.APP_URL && process.env.APP_URL.includes('localhost')) {
       console.warn('[Config] APP_URL still points at localhost. Use https://milkwise.onrender.com on Render.');
     }
@@ -106,7 +103,7 @@ const startServer = async () => {
       console.log('MilkWise - Smart milk adulteration detection');
       console.log(`Server: http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
       console.log(`Database: ${getStatus().mode}`);
-      console.log(`Strip storage: ${isCloudinaryEnabled() ? 'Cloudinary' : 'local uploads folder'}`);
+      console.log('Strip storage: local uploads folder');
       console.log('=======================================================');
     });
   } catch (err) {

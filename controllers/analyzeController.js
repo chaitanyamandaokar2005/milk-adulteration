@@ -38,7 +38,7 @@ const analyzeStrip = async (req, res) => {
       return res.status(400).json({ error: 'Milk source / supplier is required for traceability.' });
     }
 
-    const imageUrl = req.file.publicUrl || `/uploads/${req.file.filename}`;
+    const imageUrl = req.file.publicUrl || '';
 
     // Load adulterants from DB
     const allAdulterants = await AdulterantModel.find({});
