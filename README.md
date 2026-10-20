@@ -1,16 +1,19 @@
 # MilkWise
 
-Light-mode laboratory app for chemical colorimetric milk test strips (formalin, urea, starch, detergent). Upload a pad photo, sample the color, and get a **NEGATIVE** (closer to the normal pad) or **POSITIVE** (closer to the adulterated pad) **screening** result.
+Live app: **[https://milkwise.onrender.com](https://milkwise.onrender.com)**  
+Health: [https://milkwise.onrender.com/api/health](https://milkwise.onrender.com/api/health)
+
+Photograph a chemical milk test strip pad, sample the color, and get a **NEGATIVE** (closer to the normal pad) or **POSITIVE** (closer to the adulterated pad) screening result for formalin, urea, starch, or detergent.
 
 This is a color-match aid, not an accredited laboratory or official FSSAI certificate.
 
-Stack: **Node.js, Express, EJS, MongoDB (Atlas or local).** Optional Cloudinary for strip photos on Render. **No AWS.**
+Hosted on **Render**, data on **MongoDB Atlas**. Optional **Cloudinary** for strip photos. **No AWS.**
 
 ---
 
 ## Local setup
 
-1. Install [Node.js 18+](https://nodejs.org/) and [MongoDB](https://www.mongodb.com/try/download/community) (or use [MongoDB Atlas](https://www.mongodb.com/atlas)).
+1. Install [Node.js 18+](https://nodejs.org/) and use [MongoDB Atlas](https://www.mongodb.com/atlas) (or a local Mongo process).
 2. Copy environment variables:
 
 ```bash
@@ -20,9 +23,10 @@ cp .env.example .env
 3. Set at least:
 
 ```env
-MONGODB_URI=mongodb://127.0.0.1:27017/milkwise
+MONGODB_URI=mongodb+srv://USER:PASSWORD@CLUSTER.mongodb.net/milkwise?retryWrites=true&w=majority
 JWT_SECRET=a-long-random-string
 PORT=3000
+APP_URL=http://localhost:3000
 ```
 
 4. Install and run:
@@ -34,15 +38,25 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000).
 
-MongoDB must be reachable. There is no local NeDB/SQLite fallback.
-
-Optional: fill `CLOUDINARY_*` so strip photos persist on a CDN instead of `public/uploads`.
-
 ---
 
-## After these code changes
+## Production (already live)
 
-Public host: **[DEPLOY.md](./DEPLOY.md)** (Render + MongoDB Atlas).
+Public URL: **https://milkwise.onrender.com**
+
+On Render, set:
+
+| Variable | Value |
+| :--- | :--- |
+| `NODE_ENV` | `production` |
+| `MONGODB_URI` | Atlas SRV string (database `milkwise`) |
+| `JWT_SECRET` | Long random string |
+| `APP_URL` | `https://milkwise.onrender.com` |
+| `CLOUDINARY_*` | Optional, so pad photos survive restarts |
+
+Atlas **Network Access** must allow Render (`0.0.0.0/0` for a first deploy). Sessions last **3 days**. New passwords need **8+** characters.
+
+More detail: [DEPLOY.md](./DEPLOY.md).
 
 ---
 

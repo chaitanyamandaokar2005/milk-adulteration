@@ -2,6 +2,7 @@
   "name": "milkwise",
   "version": "1.0.0",
   "description": "MilkWise — colorimetric milk strip screening (not a certified laboratory report)",
+  "homepage": "https://milkwise.onrender.com",
   "main": "server.js",
   "engines": {
     "node": ">=18"

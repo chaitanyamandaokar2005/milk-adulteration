@@ -24,11 +24,12 @@ Create a **Web Service** from this repo (`render.yaml` is included).
 | `NODE_ENV` | yes | `production` |
 | `MONGODB_URI` | yes | Atlas SRV string |
 | `JWT_SECRET` | yes | Long random string (Render can generate) |
-| `APP_URL` | yes | `https://YOUR-SERVICE.onrender.com` |
+| `APP_URL` | yes | `https://milkwise.onrender.com` |
 | `CLOUDINARY_*` | no | Only if strip photos must survive restarts |
 | `PORT` | no | Render sets this |
 
-Health check: `/api/health`.
+Live URL: **https://milkwise.onrender.com**  
+Health check: [https://milkwise.onrender.com/api/health](https://milkwise.onrender.com/api/health).
 
 Start command: `node server.js`. Build: `npm ci`.
 

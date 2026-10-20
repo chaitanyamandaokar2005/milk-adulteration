@@ -4,8 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %> | MilkWise</title>
-  <meta name="description" content="MilkWise — milk strip analysis for formalin, urea, starch, and detergent." />
+  <meta name="description" content="MilkWise — milk strip analysis for formalin, urea, starch, and detergent. Screening only, not a certified lab report." />
   <meta name="theme-color" content="#F4F0E8" />
+  <link rel="canonical" href="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://milkwise.onrender.com/' %>" />
+  <meta property="og:site_name" content="MilkWise" />
+  <meta property="og:title" content="<%= title %> | MilkWise" />
+  <meta property="og:description" content="Photograph a chemical milk strip pad and read NEGATIVE or POSITIVE against calibrated color standards." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://milkwise.onrender.com/' %>" />
+  <meta name="twitter:card" content="summary" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -14,7 +14,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: APP_URL
-        sync: false
+        value: https://milkwise.onrender.com
       # Optional CDN for strip photos (not AWS). Leave unset to use ephemeral disk.
       - key: CLOUDINARY_CLOUD_NAME
         sync: false

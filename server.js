@@ -30,10 +30,19 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+const PUBLIC_URL = (process.env.APP_URL || 'https://milkwise.onrender.com').replace(/\/$/, '');
+
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.locals.appUrl = PUBLIC_URL;
+
+app.use((req, res, next) => {
+  res.locals.appUrl = PUBLIC_URL;
+  res.locals.canonicalUrl = `${PUBLIC_URL}${req.path === '/' ? '/' : req.path}`;
+  next();
+});
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -88,8 +97,8 @@ const startServer = async () => {
     if (isProd && !isCloudinaryEnabled()) {
       console.warn('[Config] CLOUDINARY_* is not set. Strip photos live on local disk and will vanish on most PaaS restarts.');
     }
-    if (isProd && (!process.env.APP_URL || process.env.APP_URL.includes('localhost'))) {
-      console.warn('[Config] Set APP_URL to your public HTTPS origin (e.g. https://your-app.onrender.com).');
+    if (isProd && process.env.APP_URL && process.env.APP_URL.includes('localhost')) {
+      console.warn('[Config] APP_URL still points at localhost. Use https://milkwise.onrender.com on Render.');
     }
 
     server = app.listen(PORT, HOST, () => {
