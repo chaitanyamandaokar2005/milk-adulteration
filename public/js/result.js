@@ -40,7 +40,6 @@ const ResultViewer = {
     setText('reportMilkSource', result.milkSource);
     setText('reportAnalyte', result.adulterant?.name);
     setText('reportAnalyst', analyst);
-    setText('reportAnalystSign', analyst);
 
     const isPositive = result.labTerminology === 'POSITIVE' || result.detectedStatus === 'ADULTERATED';
     const banner = document.getElementById('statusBanner');
@@ -111,45 +110,6 @@ const ResultViewer = {
     }
     if (adultDistMetric) {
       adultDistMetric.textContent = `ΔE: ${result.distanceToAdulterated ?? '-'} (${result.adultMatchPct ?? '-'}% match)`;
-    }
-
-    const all4Grid = document.getElementById('all4RefGrid');
-    if (all4Grid && result.all4Comparisons && result.all4Comparisons.length) {
-      all4Grid.innerHTML = '';
-      result.all4Comparisons.forEach((item) => {
-        const isMatched = item.slug === result.adulterant.slug;
-        const card = document.createElement('div');
-        card.className = `all4-card ${isMatched ? 'matched' : ''}`;
-        const isItemPure = item.status === 'PURE';
-        const bestPct = isItemPure ? item.pureMatchPct : item.adultMatchPct;
-
-        card.innerHTML = `
-          <div class="all4-card-header">
-            <span class="all4-card-title">${item.name}</span>
-            <span class="all4-badge ${isItemPure ? 'pure' : 'adulterated'}">
-              ${isItemPure ? '✓ NEGATIVE (PURE)' : '⚠ POSITIVE (ADULT)'}
-            </span>
-          </div>
-          <div class="all4-swatches">
-            <div class="all4-swatch-box">
-              <span class="all4-mini-dot" style="background:${item.pureColor.hex}"></span>
-              <span>Normal: ${item.pureColor.hex}</span>
-            </div>
-            <div class="all4-swatch-box">
-              <span class="all4-mini-dot" style="background:${item.adulteratedColor.hex}"></span>
-              <span>Adulterated: ${item.adulteratedColor.hex}</span>
-            </div>
-          </div>
-          <div class="all4-similarity-row">
-            <span>Calibrated match:</span>
-            <strong>${bestPct}% (${item.status})</strong>
-          </div>
-          <div class="all4-progress-bg">
-            <div class="all4-progress-fill" style="width: ${bestPct}%; background: ${isItemPure ? '#10b981' : '#ef4444'}"></div>
-          </div>
-        `;
-        all4Grid.appendChild(card);
-      });
     }
 
     if (result.chemicalReport) {
